@@ -1,0 +1,82 @@
+/* 1. section intro
+CSS grid layout module or in short, css grids.
+
+2. Why css grid, a whole new mindset
+A whole new mindset:
+What are css grids?
+-CSS grid layout is a brand new module that brings a two-dimensional grid system to CSS for the first time. The grids changes
+ everything, like: how we think about layout, how we write our css and even how we write our markup in html.
+-Css grids replaces float layouts, using less and more readable and logical css and html.
+-Css grids works perfectly together with flexbox, which the flexbox is best to handle ONE-dimensional components and layouts.
+-Css grids completely changes the way that we envision and build two-dimensional layouts.
+
+CSS grid terminology:
+        Css grids                                   flexbox                                         normal css
+                                            (default axis with flex-direction: row)
+        |-----------------> row axis                  ----------------> main axis                   ------------> x
+        |                                             |                                             |
+        |                                             |                                             |
+        |                                             |                                             |
+        |                                             |                                             |
+    column axis                                   cross axis                                        y
+
+display: grid;
+(display: inline-grid;)
+Just like we have a flex container in flexbox, in css grids, we have a grid container and we create a new grid container,
+by setting the display prop of an element to grid. Then ALL of the DIRECT children of that grid container become the grid items.
+The axes in grids are ALWAYS THE SAME and you CAN'T change where they are like what we do in flexbox.
+
+The vertical and horizontal lines that divide up the grid and separate the columns and rows, are called the grid lines and they are
+automatically numbered for the columns, as well as for the rows and those grid lines start from one, all the way to the number of rows plus
+one and the number of columns of course. So if you have 3 columns and 2 rows, then you would have 4 grid lines vertically and 3 grid lines
+horizontally.
+
+The actual space that is between the rows and columns is called the gutter and the row gutter can be different from the column gutter.
+What are the grid rows and columns actually?
+Well, the space(without the gutter) between two grid lines is called a track, no matter if it's vertical or horizontal. If it's horizontal,
+then it's called a row of course! and if it's(the track) vertical, then it's called a column.
+
+The area between two vertical and two horizontal grid lines is called a grid line and if that area is between two adjacent grid lines and
+two adjacent column lines, then that area is just called a grid cell.
+
+Css grids property overview:
+GRID CONTAINER:
+1)
+grid-template-rows      |
+grid-template-columns   |   grid-template
+grid-template-areas     |
+
+2)
+grid-row-gap            |
+grid-column-gap         |   grid-gap
+                        |
+
+3)
+align-items
+justify-content
+align-content
+
+4)
+grid-auto-rows
+grid-auto-columns
+grid-auto-flow
+
+GRID ITEM:
+1)
+grid-row-start          |
+grid-row-end            |   grid-row     |
+                        |                |
+                                         |  grid-area
+grid-column-start       |                |
+grid-column-end         |   grid-column  |
+                        |                |
+
+2)
+justify-self
+align-self
+
+3)
+order
+
+3. Quick setup for this section
+*/
