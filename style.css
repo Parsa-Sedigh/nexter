@@ -64,12 +64,12 @@ grid-auto-flow
 GRID ITEM:
 1)
 grid-row-start          |
-grid-row-end            |   grid-row     |
-                        |                |
-                                         |  grid-area
-grid-column-start       |                |
-grid-column-end         |   grid-column  |
-                        |                |
+grid-row-end            |   grid-row: <grid-row-start> / <grid-row-end>     |
+                        |                                                   |
+                                                                            |  grid-area:
+grid-column-start       |                                                   |  <grid-row-start> / <grid-column-start> / <grid-row-end> / <grid-column-end>
+grid-column-end         |   grid-column                                     |
+                        |                                                   |
 
 2)
 justify-self
@@ -79,4 +79,200 @@ align-self
 order
 
 3. Quick setup for this section
-*/
+
+4. Creating our first grid:
+In .container>.item.item--1*6 emmet code, the *6 part will replicate the .tem.item--1 part of emmet code, 6 times. So with that emmet,
+we would have one <div> with class of container and 6 div with classes of item and item--1 in there. Now the problem with that is, each
+of those 6 items will have the number 1.
+Learn: But in emmet we can use $ and that $ will get replaced with the current number.
+
+When you make an element, a grid container, nothing really changes(in opposite of display: flex; which makes the children of that container,
+sit next to each other in main axis). That's because we didn't define any columns or rows.
+By using grid-template-rows, we can define our rows. So let's say we want our six elements that we have currently, to be divided in 2 rows and
+3 columns(so 2*3=6). So we want 2 rows and 3 columns and in grid-template-rows we define our 2 rows and we want the first row to be 150px and
+the second one also 150px. So grid-template-rows: 150px 150px;
+
+So in grid-template-rows, we define the height of our rows. Now let's do the same thing for columns. So use grid-template-columns.
+So now our elements inside that grid-container, have 150px width and 150px height.
+After those two props, we say our elements are now already laid out as a grid.
+
+In firefox, after clicking on the grid icon on grid container, you can go to layout tab to see it better.
+
+In grid, column LINES(yes the line ITSELF and not the area that it makes with row lines) and row lines, get automatically numbered and in
+layout tab of firefox, you can turn on the display line numbers on the grid container. Remember, if you set some gaps for lines, the INNER(because
+the first and last line numbers, well, they can't have gap right??? Because those outer ones are the bounderies of grid layout)
+lines can have some space, so they're not a thin line number anymore.
+
+We can also have space BETWEEN the grid items(the children of a grid container) and that space is called gutter which can be defined for
+columns and rows and we can define it by using grid-row-gap(for rows). This prop is defined on grid CONTAINER.
+
+If you want the same gap for columns and rows, instead of writing both grid-row-gap and grid-column-gap, you can use grid-gap.
+
+So you make those 6 elements in a grid layout. If you wanted to do it without grid, we would have to have just a wrapper for
+the upper 3 items and a wrapper for second 3 items. */
+/* 5. Getting familiar with fr unit:
+We can do better when we're defining our rows and columns one by one in grid-template-rows and grid-column-rows. So imagine we had 5 rows
+and each of them width height of 150px, it wouldn't be good them to define all of them one by one. That's why in css grid, we have a new
+function called repeat() and inside of () of it, we specify the number of rows and columns(depending on we're using repeat() in grid-template-rows
+or grid-template-columns) that we want and then specify the height(if you're specifying rows) for all of them(of course we use repeat(), when
+the height(for rows) or width(for columns) of all of them are equal.).
+Important: When you say: repeat(2, 150px); you're creating 2 tracks and if it was used in grid-template-rows, you're creating 2 tracks for rows.
+Ex) grid-template-rows: repeat(2, 150px); means 2 rows with height of 150px and it's equal to have: 150px 150px
+
+Ex) Let's imagine currently we have grid-template-columns: repeat(3, 150px); but now we want the third column to have 300px and not 150px.
+What we do now?
+grid-template-columns: repeat(2, 150px) 300px;
+
+What if we wanted to make the last column occupy the rest of the grid container?
+This can be done in flexbox by using flex: 1; and with that, the flex item would expand and occupy all the possible space. In grid we haven't a
+prop like that, but we have a similar functionality. In this case and in grid, we need to use fractional unit.
+Important: So you can use 1fr for the width of column you want it to occupy the rest of the grid container in the grid-template-columns prop.
+Learn: 1fr is a fraction of the available space.
+Recap: When you have grid-template-columns: repeat(2, 150px) 1fr; , we define 3 column tracks. The first one will have 150px, the second one also
+150px and the last one is 1 fractional unit and the fr represents a fraction of the available space. So it takes all of that space, when we set it
+to 1fr.
+
+Also there's other way of using fr unit. When you say: grid-template-columns: repeat(3, 1fr); with this, we have 3 tracks each of them with 1fr and
+by saying that, each of those three column tracks has the same width(because we used repeat() for them) and by using 1fr for all of the
+tracks, we can divide the entire space in 3 parts.
+So in grid-template-columns: repeat(3, 1fr); we have 3 columns, all with the same width.
+
+Ex: grid-template-columns: 1fr 2fr 1fr; with this, the second column is double the size of the first column and last one. Why is that?
+Because 2 is double of 1. So because we're using fr, all the empty space is divided and then 2 of the fractions are assigned to the second column and
+then 1 fraction of empty space if assigned to first one and 1fr is assigned to last one.
+
+Ex) When we say grid-template-columns: 1fr 3fr 1fr; , the available(because we're using fr) space is divided into 5 parts(1 + 3 + 1 = 5).
+EX) When we say grid-template-columns: 1fr 3fr 3fr; the second and last one are three times bigger than the first one.
+Ex) In grid-template-columns: 50% 1fr 1fr; let's imagine the grid container has 1000px width, then the first column has 500px. So what we
+realize is, the percentage unit doesn't take the gap into account. So basically it takes 50% of the entire width of grid container and then the
+rest is for other columns and also for the gap. So if you make it to have 80%, you see the column with fr units become narrower. Because now
+the first column becomes larger and the gaps are still the same(because we didn't change the gaps between columns), therefore the columns with
+fr units become narrower.
+
+Ex) In grid-template-rows: repeat(2, 1fr); and by having the grid container with 1000px height(why I say height here? Because rows are in relation to
+HEIGHT of grid container and the columns are in relation to width of grid container, so when we set a number in grid-template-rows, it's in
+relation to height of the grid container and when we set some numbers in grid-template-columns, they're in relation to WIDTH of their grid container.)
+now each of the rows occupies all the space it can, in order to fill up the height of the container. So the entire height of container is
+the gap between rows and the height of rows. So we have 2 rows with the same height and they're occupying the entire height of their container.
+
+We used fr unit, more on the columns than rows.
+
+Now let's place the grid items exactly where we want them to be on the grid. Because currently, all of those items are automatically placed
+in the order which we have them in the html source code. But we can change that.
+
+6. Positioning grid items:
+When you want to position items, remember to turn on the line numbers in firefox devtools.
+Right now, all of our grid items are laid out according to their html source code order and if you see the result, the reason for positioning of
+those grid items is for css grid's automatic placement algorithm and the default behavior is that the items are laid out just like they are in the
+html code.
+
+Learn: A grid cell is the area between two adjacent row and column lines. In the codepen, the grid cell number 5 is the area between column line 2 and
+ column line 3 and the row line 2 and row line 3.
+
+Currently we want to put item number 1 in the place where item 5 sits. How we can do that?
+That's when the line and row numbers come into play!
+First let's go to the item1 and define a couple of props. First we define grid-row-start and set it to 2 for that item.
+Learn: In grid-row-start we specify the number of row line which in that row line we want the cell to start.
+Right now, we want to put cell 1: Orange in cell 5: Blue and as you can see, the cell 5: Blue, starts at row line number2, so for placing that'
+1: Orange in there, we specify it's grid-row-start to 2 and with that, the item which has that prop(in this case, the 1: Orange), moves to the
+second row.
+Important: So with grid-row-start: x; the item that has that prop with x value, starts from xth row.
+
+After that, we set grid-row-end to 3 for that item--1 so with that, we wrote a cleaner solution(although without specifying that, we get our
+desired result in that case.)
+Important: So by saying grid-row-start: 2; and grid-row-end: 3; , we say that grid item which we define these props for that, should be placed in
+ a cell which that cell starts by row line number2 and ends at row line number3.
+So now, the item--1, moved to the second row(because of grid-row-start: 2;) and then the other item which before was placed in the cell which NOW,
+the item--1 is sitting there, move up in the place where item--1 was sat there before. In other words, their cell was swapped.
+
+Now we need to kinda shift the cell-1 in column axis to place it where currently cell-5 sits. So let's use grid-column-start and set it to
+2 and then for cleaner solution, set grid-column-end: 3; so now with that, we've placed our item exactly in the grid cell we wanted.
+
+Also there's a bit easier way to do that and instead of grid-row-start and grid-row-end we can say: grid-row: 2 / 3;
+So grid-row is shorthand for grid-row-start and grid-row-end.
+
+Now let's position 5: Blue instead of 4: Pink . So let's go where we select the number 5 cell and then specify grid-row and grid-column for it.
+Now what about values?
+Currently the 5: Blue cell is in the second row or in other words, between row line 2 and 3 but we want it to be between row lines of
+1 and 2. So grid-row: 1 / 2; Important: now with that, it moves to first row. Because the grid-row-start is set to 1, so it goes to first row.
+
+Also instead of saying grid-row: ...; and grid-column: ...; there's a shorthand for it which is grid-area.
+Also there are actually more ways of positioning items in grid.
+
+We placed 6: Brown cell in where currently 3: Violet lives. So let's go to 6: Brown and say: grid-row: ...; and grid-column: ...;
+After doing that, there's no gurantee that those items will SWAP in where in the past, the other one lives. So if 6: Brown goes to where
+3: violet; lives currently, there's no gurantee that the places of them actually swap. So maybe 3: Violet goes an other place after the other cell
+comes into it's place.*/
+/* 7. Spanning grid items:
+Let's see how span grid items across multiple grid cells in order to occupy entire areas. So items can occupy multiple cells and by default,
+each item in the beginning occupy 1 cell.
+So suppose we want that violet item not only to occupy that single cell, but to span across those 2 cells(one cell is the cell where currently
+is there and the other one is the current 1:orange cell.) How we do that?
+So far we only placed grid items into single cells and therefore the end is always the beginning + 1.
+Important: So when an item has just one cell we can say: end of item(not cell!) = beginning of item + 1 and the end and beginning means the
+ grid-row-end or grid-column-end and beginning means grid-row-start and grid-row-end. In other words, when an grid item has 1 cell(which by
+ default is), the grid-row-end = grid-row-start + 1 and that's true also for column. Therefore so far, we always had grid-row: <x> / <x+1> or <x+1>/x
+ and also that's true for column. So only one column and one row which that one column and one row result in one cell which we had so far.
+But what if we put a higher number?
+If we do that, the element would simply occupy more space(more cells and also the gap between those cells too!).
+So for example let's say we want the 1: Orange to start at column num2 and end at column num4.
+Important: So when a grid item occupies more than 1 cell, yes! it actually maybe occupies 2 or 3 or ... cells, but also the gap between those
+ cells.
+
+Now what about the grid item that was in that cell which now belongs to 1: Orange grid item?
+Well, it simply moved down. Because that's what the css grid algorithm does. So if we have more items than the number of cells in a row(or
+when we end up with more items than the available space, so the available space isn't enough for our items), then css grid will automatically
+add a new row or a new column. But in this case, just a new row and that new added part(in this case a new row), called an implicit grid.
+
+Now if you make 3: violet to span 2 cells, it will go down, to a new line and also 4: pink will do the same. WHY?
+Because we also placed another element (1: Orange) in where the other element which is now explicitely positioned. But we want to also
+EXPLICITELY place the other element in where another EXPLICITELY positioned element exists! But that doesn't work and therefore the new
+explicitely positioned element goes to find a new place. But if you really want to make the other one to be in that place and not the other
+element which currently is in that place, we need to explicitly set the row number(or the column number. But when use which? If you CURRENTLY
+set column and you don't get the desired result, you need to explicitly set the row(start and end) number for the item that you want to
+place it where another item currently sits there, but if you set row and didn't get the desired result, you need to explicitly set the
+column-start and end number for that item) for the element we want to be in that place which currently another element lives in that place.
+Now if you do that and explicitly set the row-start and row-end(which means it was positioned with column props but we didn't get the
+desired result by just specifying the column props for that element) for the element that you want to position it in where the other
+explicitly positioned element currently sits there, you see that the other one which was before in that place, goes under the new one(the one
+we set both column and row props to position it exactly where we want).
+So what that means, is we can actually have multiple grid items in the SAME CELL(or cellS, if the item was expanded).
+
+So maybe one EXPLICITLY POSITIONED item which expanded to 2 cells gets on top of another POSITIONED item which just has 1 cell, like our
+code in codepen.
+
+Now if you want the other one which currently is under another positioned element, to be on top of the other one, you can give it a higher z-index.
+
+So that was one way of spanning items across multiple cells. But there's another way. So let's do that with the 2: green item and currently
+it's not positioned at all and that's perfect to show how it works. Now we want it to be from column1 to column3. So we could say:
+grid-column: 1/3; and after that, because we have another positioned item(if it was not positioned, there was no problem and actually this item
+would go down, instead of our current item that we want to position it) in the place where we want it goes to the last line in our grid layout
+inside the grid-container, so we need to ALSO explicitly set it's row props(start and end).
+
+So instead of that, we can say we want it to span across 2. So: grid-column: 1 / span 2; instead of grid-column: 1 / 3;
+Learn: So span x; means it must span across x cells. For example, grid-column: 2 / span 2; means the grid item must start at column num2 and
+ span across 2 other cells in the column direction(because we're using column prop).
+
+if you used span y and you see that it creates a new column or row, that's because for example you defined 3 columns and with that span 2,
+you go one column further which it wasn't defined and that new column is completely empty, because we didn't define any width for it, but it
+still tried to kinda create a new column there. So if you're not really sure what to put in the span <y>, there's actually even another way for
+spanning items over multiple cells.
+
+This approach is for when you don't remember how many columns(in this case) we have. All we know is that we want that grid to be ALL UNTIL THE
+END and in order to represent the end, all we have to do is to say: -1. So when you want an item go till the end, instead of hard coding
+how many cells we want to occupy by using the span <x> approach, we simply put -1 and then it goes all the way till the end.
+
+In example below, we say the item should start from column number2 and go all the way to the end.
+grid-column: 2 / -1
+
+So for spanning items we use 3 ways(which in all the ways, we use grid-row or grid-column depending on you want to span the item in row direction or
+column direction):
+Actually there's 2 way and the third way is for special use case.
+1) We define the END(because we want to span the item right?) number of the row or column line.
+2) Use span keyword which actually is better than the first approach
+3) (IF you want to span the item all the way till the end of grid) use -1.*/
+/* 8. Grid challenge: */
+
+/* My notes:
+The first and last(outer) column and row tracks(lines) never would have gap and therefore they're always thin lines. But if you set some gap
+for inner tracks(all of the tracks except the first and last are inner tracks or lines), they become thicker and are no more like lines.*/
