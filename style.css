@@ -210,7 +210,7 @@ So suppose we want that violet item not only to occupy that single cell, but to 
 is there and the other one is the current 1:orange cell.) How we do that?
 So far we only placed grid items into single cells and therefore the end is always the beginning + 1.
 Important: So when an item has just one cell we can say: end of item(not cell!) = beginning of item + 1 and the end and beginning means the
- grid-row-end or grid-column-end and beginning means grid-row-start and grid-row-end. In other words, when an grid item has 1 cell(which by
+ grid-row-end or grid-column-end and beginning means grid-row-start and grid-row-start. In other words, when an grid item has 1 cell(which by
  default is), the grid-row-end = grid-row-start + 1 and that's true also for column. Therefore so far, we always had grid-row: <x> / <x+1> or <x+1>/x
  and also that's true for column. So only one column and one row which that one column and one row result in one cell which we had so far.
 But what if we put a higher number?
@@ -271,8 +271,72 @@ Actually there's 2 way and the third way is for special use case.
 1) We define the END(because we want to span the item right?) number of the row or column line.
 2) Use span keyword which actually is better than the first approach
 3) (IF you want to span the item all the way till the end of grid) use -1.*/
-/* 8. Grid challenge: */
+/* 8. Grid challenge:
+The right sidebar, is slightly more narrow than those 3 columns next to it. So we need to define the width of the sidebar column and then
+divide the remaining space for the other columns or the other tracks and the header and main content and footer, we'll also have some spanning
+going on(because they have multiple cells).
+
+Also we have the SAME gutter for rows and columns.
+
+9. Grid Challenge A Basic Solution:
+Learn: For selecting all the DIRECT children of an element(the container of those elements) at the same time, we say:
+ <select that element which is direct container of the elements that we want to apply styles to all those direct children> {
+  & > * {
+   }
+ }
+
+First define display: grid; on the .challenge to make it a grid container.
+In the challenge, we have 4 columns, 1 column for each of the small boxes and then 1 column on the side, for the sidebar and also
+we have 4 rows. So let's define grid-template-rows: 100px 200px 400px 100px;
+So the header row, has 100px height.
+
+When defining the columns inside .challenge, remember that the sidebar was a bit smaller than the rest of the columns and what we want, is to have
+three equally sized columns and then one smaller one. So say:
+grid-template-columns: repeat(3, 1fr) 200px; .
+So sidebar will have 200px width(because we're defining the columns) and then, the REST of the space will be divided for the three other columns and ALSO the
+gutter.
+
+With those definitions, we have 4 column tracks and 4 row tracks as well.
+Currently we have 7 grid items, but we don't see the rest of the rows and the column tracks(currently we just see 2 rows and all our columns which are 4 columns) and
+therfore, only the first 2 rows of our defined grid-system is currently filled with items and that's because we haven't enough items to fill all of the rows. But
+that's not a bug or an error from us, the developer! It's intended. Because we want to actually give 2 rows to 2 grid-items(header and footer), so by doing that, all
+of the rows will be filled.
+Important: So in the beginning, if you don't have enough items or actually plan to don't having enough items, all of the rows or columns might don't get filled and
+ in 90% of situations, that's intended, because we want to give for example the whole of a row or a column to just 1 item or 2 items and... and therefore, at the END,
+ definitely all of the rows and columns will be filled(or maybe the unfulfillment of some rows or columns are actually intended by developers!).
+
+So currently we see those empty grid-cells which were actually created with our grid track declaration. We just don't have enough grid items to fill all of those
+cells. But don't worry, we're gonna care about that now! So let's start by POSITIONING all our grid items.
+
+First thing to do, is to make the header <div>, span all the way from the first column line to the last one. So select that grid-item and say:
+grid-column: 1 / -1
+
+Important: The trick for go ALL THE WAY to the end of the grid-system:
+ 1) Use span <number of columns or grid to go to the END of grid-system>
+ 2) use -1
+
+Now with just making an item or some items to span all the way to end of grid-system, that possibly will make the other items to go downward and fill the remaining and
+empty rows and that will make our kind of problem to nearly be solved.
+
+After making the header go all the way from left to right, notice we didn't actually have to declare the grid-row property there. Because the automatic placement
+algorithm, takes care of putting the header right in the first line, because it's actually the first element in the markup as well. So that's automatically placed there
+and we don't have to declare the row props too! and the same actually applies to our small boxes. Because they're already exactly where they should be, so we
+don't have to do anything. Because again, automatic placement outs them, where we want them to be.
+
+The sidebar should spans across those 2 cells starting from row number2. So select the sidebar first. After setting the grid-column or sidebar, it's position is
+not still correct, because we want it to start from row number2. So let's set grid-row for it explicitely(so we had to define BOTH column and row props for it,
+in order to set it exactly where we want it to be).
+
+
+Now we must make the main-content <div>, spans 3 cells from column1. So select main-content <div> and all we have to set for it, is the column prop. Because the row
+prop for it, is already correct(it's already in the correct row and therefore, all we have to do is to manipulate its position in the column prop).
+
+That layout is hard to build in old-school fluid layout.
+There are basically 2 more ways to position grid-items on the grid.*/
+/* 10. Naming Grid Lines:
+*/
 
 /* My notes:
 The first and last(outer) column and row tracks(lines) never would have gap and therefore they're always thin lines. But if you set some gap
 for inner tracks(all of the tracks except the first and last are inner tracks or lines), they become thicker and are no more like lines.*/
+
