@@ -33,8 +33,8 @@ horizontally.
 
 The actual space that is between the rows and columns is called the gutter and the row gutter can be different from the column gutter.
 What are the grid rows and columns actually?
-Well, the space(without the gutter) between two grid lines is called a track, no matter if it's vertical or horizontal. If it's horizontal,
-then it's called a row of course! and if it's(the track) vertical, then it's called a column.
+Important: Well, the space(without the gutter) between two grid lines is called a track, no matter if it's vertical or horizontal. If it's horizontal,
+ then it's called a row of course! and if it's(the track) vertical, then it's called a column.
 
 The area between two vertical and two horizontal grid lines is called a grid line and if that area is between two adjacent grid lines and
 two adjacent column lines, then that area is just called a grid cell.
@@ -334,9 +334,299 @@ prop for it, is already correct(it's already in the correct row and therefore, a
 That layout is hard to build in old-school fluid layout.
 There are basically 2 more ways to position grid-items on the grid.*/
 /* 10. Naming Grid Lines:
+Let's look how we can position grid items on the grid, by naming our grid lines. Before this lesson, we looked at how to position grid items on the grid,
+by using the automatically generated grid line numbers. But we can make our lives easier by NAMING those grid lines.
+So method 1 is line numbers. Now let's comment out all of the code that we wrote for the challenge which we wrote with method 1 of positioning.
+So let's start from scratch. Now copy the code you had before and paste it for method2.
+Learn: For naming our grid lines, we can use: [<name of the line>] . So when we're defining our grid lines(so inside grid container or the element or selector that has
+ display: grid;), therefore, when we're saying like: grid-template-rows: ... or grid-template-columns: ... or when we're actually DEFINING our lines(whether column lines or
+ row lines), we can give each of them a name, before specifying their value.
+ Also remember: When you have specified n values as rows of a grid container, you would have n + 1 line numbers for rows and 2 of those line numbers would be
+ edge numbers.
+The best practice for naming grid lines is to describe the content that will be IN the track. So in our example, we wanna name the content between line number 1 and
+2 and because the content inside those 2 line numbers, is our header, I named the track, header and after doing that, say whether it's the start or the end.
+Learn: So the naming of grid lines is based on 2 factors:
+ 1) The content that would go inside that line number(the one we're CURRENTLY naming it) and the next line number.
+    So in this case, the content that would go between (line number 1 WHICH HAS 0 HEIGHT! BECAUSE IT'S AN EDGE LINE NUMBER!!!) and 200px(line number 2) is our header.
+ 2) Is the current line number, the beginning or the end of that content? If it's the beginning, give it -start at the end of it's name and if it's end, give it: -end.
+ In this case, we gave the first line number(which isn't explicitely set, because it's an edge line), the name of header-start and the next line number, header-end(which is
+ the line number after traveling 100px).
+EX)
+grid-template-rows: [header-start] 100px [header-end] 200px 400px 100px;
+
+So now, the line number1, which is an edge line, is no longer JUST called line number 1, but it's ALSO called: header-start and the second line, is called header-end.
+NOW WAIT!!!
+What about those small boxes there?
+We named the line that is the beginning of those boxes, header-start, but this name doesn't fit the content that we have(those boxes)! So what we do now?
+The second line is the header-end, but simentinously, the start of those small boxes!!! In other words, it doesn't make sense that that line there, is called header-end,
+because it's not JUST the end of the header, but ALSO the start of those small boxes and so for that reason, we can actually give a line, more that one name.
+So those are arbitrary names that we come up with(at least the first parts of the names are arbitrary!- for example, box name is arbitrary) and then we just
+call the line, before the boxes, start, and the line after the boxes, end.
+So the second line number(which is the line, in between the header and the boxes), is now  only called header-end and also, at the same time, is called box-start.
+
+It's a good practice to name line numbers and then use those names, to position the grid-items in it and we're gonna do the same thing for column tracks, because remember:
+Important: In a grid-system, we have 2 kind of lines(tracks === lines): row-lines and column-lines .
+
+For USING those names, instead of using the numbers of lines, we just use their names. Also instead of using span 2 or -1 for spanning the grid-items, we can use
+the name of lines that those grid-items. ends.
+
+In our example in codepen, footer class, doesn't use(need) the row declaration(grid-row prop), so we can't use row line names for it. So in fact,
+we wouldn't maybe really have needed to define all of those names for row lines!
+
+In column tracks(lines), we have a different situation. Because when we were defining the column tracks for our grid-system, we had that repeat() function there,
+which is gonna create three column tracks there with ONLY that 1 defenintion(with only using a function). So we haven't multiple values for column lines,
+so that we can name EACH of them separately.
+
+Remember: Therefore, it wouldn't make much sense to put the line name before the repeat() function and then after it. Because by doing that, ONLY the
+lines before those 3 lines which are created by repeat, and after those 3, would get a name. But we want ALL of the lines to have a name. So what can we do?
+Well, we put the name into the () of repeat() ! and in this case, we're gonna call those 3 lines which are created by repeat() , col-start and also col-end(why?
+again, because one line, is the end of previous column and also the start of next column, so we give it two names.).
+In the example, it will create a so-called: named set of grid lines.
+So with that(repeat() function with having 2 names), we create 3 columns and each of them starts with a line called col-start and one with col-end and that
+would mean, that we would have CONFILICTING line names. RIGHT?
+And so what happens, is that for the first column, it's gonna be called: `col-start 1` and `col-end 1`, then for the second
+column track it's gonna be called col-start 2 and col-end 2 and ... .
+Important: So: repeat(3, [col-start] 1fr [col-end]) is a named set of grid lines. So when we have line names inside repeat(),
+ then it's gonna create a named set of grid lines.
+So for example, in our example, in the .header , the first COLUMN grid line is called col-start 1, because the header, is starting from the
+first column grid-line which is col-start 1. So the first grid column line of our grid layout(why all of the grid layout? Because the
+vertical lines spans all over the grid system right?) is col-start 1 and the next grid column line is called col-end 1 and AT THE SAME TIME, it's
+also called col-start 2 and the next vertical one is col-end 2 and col-start 3 and the -1 as the grid column lines is called grid-end which is
+the name that we choose when we were defining our column names.
+So in .header , write:  grid-column: col-start 1 / grid-end;
+Now we could still use the -1 trick instead of grid-end , to indicate that the grid-item should go all over to the end, like we had before.
+Now let's change the gird number columns of .sidebar to grid-name columns.
+Important: When you have grid-column , you can use named column grid lines and when you have grid-row prop, you can use grid row line names.
+
+EX)
+repeat(3, [col-start] 1fr [col-end])
+
+So in professional layouts, we name all our tracks, both the row tracks and the column tracks and then USE these names to position our
+grid -items to build our layouts.
+In the next lecture we're gonna see the third method of how to position grid-items.*/
+/* 11. Naming Grid Areas:
+The third method of positioning grid-items on the grid, is by naming entire areas. First comment out the method 2 codes in codepen and copy it and
+paste it to start using method 3.
+Now how we do that?
+We use grid-template-areas prop. This is how we name grid areas:
+We write a couple of strings and in there, we basically give each grid cell, a name. So in our case, we have a 4 by 4 grid(4 x 4 grid).
+So in the first string, we give the first 4 grid cells, 4 names and what are our first 4 cells?
+Well, those are the 4 cells inside header and all of them, are for the header. So let's call each of them, head. So: "head head head head"!
+So the 4 cells will be called head and that's because we want the header, to be in all of those 4 cells. So basically that first string here, defines
+the first ROW of our grid. Now we hit enter, then come to the exact place under the last string you defined for defining the next string and then
+we need to call the next 4 cells (which are in a row, so the three small boxes and the most up cell of sidebar). So let's call the 3 boxes, box and
+then the last one(most up grid cell of sidebar), side.
+So it's good to use really small names, so as small as possible, so that it doesn't take too much space in the declaration of names of lines, so
+that it's also not too hard to write, because there's usually a lot of repetition(in this method). So: "box box box side".
+
+So basically, this template area approach, just creates a representation with text, of how our final layout is gonna look like.
+Now what do we have in the third ROW?
+We have 3 cells of main-content , so let's give each of them "main" name, so: "main main main" and then on the side, we have one of the cells of
+our sidebar. So "side", therefore for the third row we have: "main main main side" and then in the last row and therefore, it's the last string,
+we have 4 times, the footer. So let's simply use foot for the name of each of those cells in there. So : "foot foot foot foot"
+
+Important: In third method(naming grid areas), each row is a string.
+This is a great way of placing grid-items on the grid, because it's simple.
+Now once you have the declaration of cells finished(once the string declarations finished), then all we have to do is to actually PLACE the items.
+So let's just remove the grid-row and grid-column from the code we currently have in codepen and start fresh.
+Let's position the .header. Now use grid-area prop. In the past, we used this prop to put the column-start, column-end, the row-start and row-end(so those four
+numbers, remember?). BUT! There's actually another way of using this property here and that's called for the grid-template-areas(the strings) that we defined
+earlier.
+Now all we have to do, is write head for the grid-area prop of .header . So:
+.header { grid-area: head; } without any quotes. So it places this item(head) on the entire area that we defined to be head. So imagine if we put sth else for
+the first row and for the last "head", like "side", so if we had: grid-template-areas: "head head head side" and for .header, we had:
+.header: { grid-area: head } therefore, Now the header, only occupies those three cells which has named "head" and for grid-area of .header ,
+we used head name and the sidebar cell is at the fourth item.
+
+Now after setting the named grid-areas for .header{} , we see that those 3 small boxes are positioned properly, so they don't need any grid-area prop.
+So let's go to .sidebar{} and for that, just use grid-area prop and for it's value, all we have to do is to say the name of the area which is side and the
+.sidebar is exactly where it should be!
+
+So the third method has a completely different philosophy. So in this approach, FIRST we think about the layout(the defining of grid-template-area in the
+grid container, is the process of thinking of layout). So where all of those items should be placed and then all we have to do is to give the names to
+each of the classes that we have(so for example we gave the head name, to .header in order to give the .header , all of the grid-areas that have head name.)
+While with the two other methods that we did before, we used the names of the lines(method 2) or the numbers of those lines(method 1), which those 2 are quite
+similar, and then, for each of those items, we had to think, where to position them.
+
+Important: When we create that template-area (grid-template-area prop in the grid container) definition, we need to be careful and create a COMPLETE
+ REPRESENTATION of our grid system there.
+So if it's A BIT different at all, then ALL of it is not gonna work. So for example, if you just delete the last foot name from grid-template-area in our case,
+you'll see that it's not working AT ALL anymore and looks really weird and that's because, we didn't really fill up, all the 16 cells that we have in our case.
+So we have 4 columns, 4 rows, when 4 * 4 makes 16 and so there, we have to have 16 names. But we deleted one of them, so it's now 15 names and that causes serious problem.
+
+Another thing that we can do with template areas approach, is to actually leave empty cells and all we have to do for that, is to instead of deleting the name
+of that cell(which would cause problem), is to put a dot. For example, if we place dot instead of fourth head cell, the small box 1 would go to the place where
+that fourth head cell was placed before and other small boxes would shift one cell to the left but the sidebar cell in the second row(which is the row that
+other boxes are there too, wouldn't shift to left, because we explicitely set it's position). WHY that small box 1 would go there and not other cells?
+Because we didn't really(explicitely) those small boxes there. Right?
+So if you REALLY(because currently in our example, by putting dot in the place of fourth head cell, that head cell is gone, BUT other grid cell or item which is
+small box 1, is now in the previous place of fourth head which we deleted, so that place STILL isn't empty!) wanted to leave a cell empty, we would have to
+then place those three small boxes in the place they should be always, even if there's other room in our grid system, so they won't shift at all.
+For doing that, let's select those small boxes with comma selectors: So give those small boxes, some different classes:
+.small-box-1, small-box-2, small-box-3 {
+    grid-area: box;
+}
+
+But this isn't correct. Because now, the small-box-3 has all of the place where those 3 boxes should be exist and also the gutters are gone!
+So obviously this is false and that's because, the grid-template-area definition isn't correct. Because currently, the place where this
+small-box-3 is placed, in the grid-template-area , is called: box box box. So what we say in box box box, is that, that area should all
+the be same, which in fact, it is not!
+So let's change box box box to box-1 box-2 box-3 , so now in grid container we have:
+grid-template-areas: "head head head head"
+                     "box-1 box-2 box-3 side"
+                     "main main main side"
+                     "foot foot foot foot";
+
+and then put box-1 for grid-area prop of box-1 and then put box-2 for grid-area prop of box-2 and ... . So:
+.small-box-1 { grid-area: small-box-1; } and ... .
+
+Now with that, all of the three small boxes are in the place where they should be and they won't shift at all and therefore, the fourth cell of
+header is empty now.
+That was all the content for naming grid-areas and how to position grid-items on the grid with this approach.
+
+So these 3 methods, can be used in different situations. For example, the third method(naming grid areas by defining grid-template-areas in grid container),
+is great for smaller layouts(like 4 by 4 or 5 by 5 grid layouts), but if we have a huge layout like a complete page, maybe with 12 columns or 15 columns and
+10 or 15 lines, then it becomes very unpractical to write out all of those area names. It's simpler to simply name the grid LINES(approach 2) and not
+grid AREAS(approach 3) and do it like the second approach. */
+/* 12. Implicit Grids vs. Explicit Grids:
+Let's create a new project. In Emmet, if you write: .container>.item.item--$*8 , it would create a <div> with class of container and then 8
+direct child of that container, with classes of item and item-$(1, 2, ...).
+
+You can place .item inside .container, even without & selector, so it's no problem, because the .item is actually inside of the .container. So:
+Important: If an element is inside an other element, you can nest the selector of child element inside the selector of parent, but if an element isn't
+ inside another one in the markup, you can't place the nested one inside the parent even if you don't use & selector.
+EX)
+<div class="container">
+    <div class="item"></div>
+</div>
+<div class="outside"></div>
+
+.container {
+    .item {} // would be applied
+
+    .outside {} // wouldn't work
+}
+
+Now let's add some grid tracks and starting with the row tracks. So define grid-template-rows in the .container .
+Important: Also we want 2 columns with the exact same width, occupying the ENTIRE width of the container. So use: repeat(2, 1fr);
+and just to see, what's going on there, let's add some gap with grid-gap prop.
+
+But currently, we have 8 items in markup but in css, we defined 2 rows and 2 columns! So actually, we defined a 2 by 2 grid which are
+perfectly shown, but then, down them, we have the other four cells. Why? Because we actually have 8 items.
+Those four grid cells that we (explicitly) defined and they are at the top of the other 4 ones which are now occupied by those 4 grid items and
+this is the so called: explicit grid. Because we EXPLICITLY defined HOW those rows and those columns should look like.
+So again, that upper part(those 4 grid cells) of the grid-system is called explicit grid.
+Important: Now if we have more grid items than we have space, well, then css grid, automatically adds some more tracks to the grid system, so that
+ we can then fit all of those remaining grid-items and that's what happened in our example.
+You see down there, those 4 items are in two ROW tracks that were added automatically. So they were added to our grid system, in order to
+fit the remaining 4 grid-items and that part(those 4 items) of the grid-system, that part is called the implicit grid.
+
+So the part that we ACTUALLY defined in our code, is the explicit grid, so the part that was defined by grid-template-rows and grid-template-columns props
+and then the part that is automatically added, in order to fit the content that doesn't fit IN our explicit grid, is called implicit grid and
+css adds the implicit grid after that explicit grid.
+
+Actually, a track is the space between 2 lines.
+
+Now what if we wanted to somehow style that implicit part of the grid?
+There's a property for that. So let's say that we want the row tracks in implicit grid to have a defined height and we can do that by using
+grid-auto-rows: 80px; prop. So now those automatically added tracks, they have a height of 80px. So the last 4 items have height of 80px.
+
+Also in the grid inspector in firefox, the implicit and explicit grids look a bit different. So you see that solid line goes AROUND the EXPLICIT grid
+but doesn't go around the implicit grid too. So the solid line ends where the explicit grid ends and around the implicit grid, there's no
+solid line.
+Also the grid lines in the explicit grid are dashed while in the implicit grid, they're dotted.
+
+Now you may ask why are those additional grid-items that we can't fit into our explicit grid, added as rows and not as columns?
+It's because of a simple small property that is called grid-auto-flow and this prop by default is set to row, but we can also set it to column,
+on the grid container. So now if you set: grid-auto-flow: column; on the .container , the remaining items(the items in implicit grid) are now
+no longer added as rows, but as columns. Because we told our grid(grid-container) to flow as columns.
+So you also see that there's a difference in the way that those items(the grid-items in implicit grid) are placed and what this means, is that the
+automatic placement algorithm now places these items in order to fill up the columns and no longer the rows.
+
+Important: So when grid-auto-flow is set to row(the default), if we have some implicit grid-items, css will automatically create additional rows and will
+ keep the NUMBER of columns the number that we explicitily defined in code. But if you set grid-auto-flow to column, the implicit grid-items will be
+ added into new columns, so the NUMBER of rows will be preserve as what we defined in the css code and instead, the number of columns will be increased.
+ Now with having grid-auto-flow: column; , if we added more and more grid-items, then new columns would be created and the number of rows will be preserve.
+ Now of course, if we can style the rows that are automatically added(which means the grid-auto-flow is set to row) we can do the same for the new created
+ columns, by using grid-auto-columns: <the width of automatically added columns>.
+ So grid-auto-columns only applies as soon as we set aut-flow to column and the grid-auto-rows(if is set!) for the automatically created rows,
+ is not really relevant for this case(the case where we set grid-auto-flow to column, so the grid-auto-rows won't affect anything but the
+ grid-auto-columns will affect.)
+
+So you saw, that it's actually not a problem at all, if we have more items than we explicitly defined in our code(for example if you use 3 values for
+grid-template-rows and 3 values for grid-template-columns, then we would have 9 items, but if we had more than 9 items, it would create implicit rows
+by default!), than we can fit them in the grid that we defined initially.
+So this implicit grid and the ability to style those additional rows and columns, is great for use cases, where you don't really KNOW how many rows
+or columns there will be in your grid-system or in your layout.
+
+So for example, if you have an ajax call where you can load data from a server(api), while the page is loading and you don't really know if there
+are 10 items or 12 or ..., so if you don't know how many there are, you can simply style those automatically added rows or columns and then everyting
+is gonna work as you expected. So you can control how the grid will look like even if you don't know how many items there will be in it(the grid system.)*/
+/* 13. Aligning Grid Items:
+Now we're gonna look at different ways of aligning grid items to grid areas. Let's first set grid-auto-flow back to it's default value. So by doing that,
+our grid-items are placed in rows rather than in columns(in other words the number of columns would have the number we defined in our code)
+and so that the additional items are then placed in the rows.
+
+Also let's add some spanning there to two of those grid items, so that we can better see how this alignment of grid items to grid areas work.
+For that let's select item--4 and item--7 and give them different background-color and for item--4, lets say we want it to start
+on the grid row number 2 and then span across three row tracks. So in other words:
+.item--2 {
+    grid-row: 2 / span 3;
+}
+
+and you will see that it also shifted from the second column to the first column track(gone left side) and the instructor is not really sure why it
+did that!!! but it has to do with the automatic placement algorithm.
+Also by using grid-column: 1 / -1; on the .item--7 , you'll see that the las t grid item goes to another newly created row track. So now we actually
+have 4 implicit row grid tracks and 2 explicit grid row tracks.
+
+Aligning the grid items to grid areas is very similar to align-items in flexbox and in fact, we have the EXACT same property in css grid too.
+So just like in flexbox, we apply these props to the grid container. So give .container , align-items prop which is gonna align the items across the
+column axis and if you put it to center, that's what we meant with aligning the grid ITEMs inside of  grid-AREAs.
+For example in our example, the elements with orange background(and the content that are IN that grid item) are the grid items and
+and that grid item is now aligned vertically in the center of the grid AREA.
+In devtools, we can see the row and column tracks.
+
+Now why the grid items were streching all the way from top of their grid-area to the bottom of their grid-area, before we set that align-items to
+center?
+Well, it's because of the same reason that it is in flexbox and that's because align-items by default is set to stretch. So if you set it to
+stretch, then the grid items stretch across their entire grid-area(because the grid-item maybe has spanned over multiple grid cells, so it's
+false to say just it will be stretch to grid-cell!). Also we can set it to end or start. For example with end, you can see that each of the grid-items
+is aligned to the end or bottom of each grid areas.
+
+We also have justify-items which we haven't in flexbox because flexbox isn't a two-dimensional layout system and in grid we set it on grid-container.
+
+In grid, we have align-items which aligns the items across the column axis which means vertically and then we have justify-items which aligns the
+grid-items across the row axis or horizontally. So by saying:
+.container {
+    align-items: center;
+    justify-items: center;
+}
+
+The items are completely centered both horizontally and vertically inside their grid area(and if an item doesn't span across multiple cells,
+it would be actually centered inside it's grid cell, because in that case, the grid cell and grid area would be the same).
+So with align-items, we align grid-items vertically and with justify-items, we align them horizontally inside their grid-area.
+In firefox devtools, it would show you the grid-CELLs and not grid-AREAs, you should find out the areas yourself based on your code.
+Important: If we would have an grid-item that spans across multiple grid-cells, it's grid-area is the space of cells + gutters between those cells.
+
+The default of justify-items is stretch.
+if you set justify-items to start(which means: start of the grid-AREA), the grid-items would go to the left side of their grid-area.
+
+Now, as in flexbox, where you have the align-self prop, in order to override the align-items prop that you set or may not set in the flex container,
+for one individual flex-item, we have the same in the grid. So we have align-self and also justify-self.
+So if for example, you set align-self prop for item--4 in our example, it will override the align-items prop which is on the grid container. So if
+you set it to start for item--4, then ONLY that item will move to the top and now with that, it will vertically aligned to the top of it's grid-area.
+So just like flexbox, the <>-self prop, overrides the overall setting which is set on the grid-container.
+Important: BUT IN FLEXBOX WE ONLY HAVE align-self, because again, it's just a one-dimensional layout system, but in grid we have align-self and also
+ justify-self for the horizontal direction alignment.
+And that was how we align grid-items to grid-areas, both horizontally and vertically. Now let's look how to align entire TRACKS to the grid CONTAINER,
+go to next lecture.*/
+/* 14. Aligning Tracks:
+Important: In the last lecture we looked how to align grid-ITEMS to grid AREAs and now let's look how to align entire grid-TRACKs to our grid-CONTAINER.
 */
 
 /* My notes:
 The first and last(outer) column and row tracks(lines) never would have gap and therefore they're always thin lines. But if you set some gap
-for inner tracks(all of the tracks except the first and last are inner tracks or lines), they become thicker and are no more like lines.*/
+for inner tracks(all of the tracks except the first and last are inner tracks or lines), they become thicker and are no more like lines but in the
+explicit grid, they have height of 150px.*/
+
 
