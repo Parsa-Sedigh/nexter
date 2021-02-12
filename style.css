@@ -622,7 +622,88 @@ And that was how we align grid-items to grid-areas, both horizontally and vertic
 go to next lecture.*/
 /* 14. Aligning Tracks:
 Important: In the last lecture we looked how to align grid-ITEMS to grid AREAs and now let's look how to align entire grid-TRACKs to our grid-CONTAINER.
-*/
+Before that, we need to make a couple of changes in our example, first add a comment above align-items and then comment out grid-template-columns,
+because we no longer want columns to occupy the entire container, because then we can't see how this lecture is all about and copy it and paste it
+under comment for aligning grid-tracks to grid-container and instead of 1fr, write 150px for their width and also comment out align-items and
+justify-items which were for last lecture and add grid-template-rows for this lecture comment and add height of container to 1000px and with that,
+you can see the container continues even after where the grid-tracks are, and also continues in the right side. So we have a bigger container than
+the place where grid tracks live. So grid tracks only occupy a little part of the grid-container.
+So now we're ready to ALIGN the TRACKS to the CONTAINER.
+
+Important: justify-content which sets on the container, works both in grid and flexbox and in grid, it's gonna align the tracks inside of the container, across
+ the row axis, so horizontally.
+So add justify-content: center in grid container. With that, the grid-tracks went to the center of their container.
+So just as we center flex-items inside of a flex-container with justify-content, we do it the exact same way with the grid-tracks in css grid.
+So this is what we will use, if we wanna really center the entire content of the grid, inside of the container. We also have: start, end, space-between,
+which would push each of the columns to one of the sides of the grid container. So basically it divided all of the empty space, between columns(tracks) and
+that's the exact same behavior as in flexbox with space-between. We also have space-around which with that, the space on the left side is the same as on
+the right side which makes that the space between items is double the space on outer sides(the space in most left and the space in most right side).
+justify-content: space-evenly; the space is now ALL the same. So the space between the items is the exact same space as on the left and the right side
+of each of the items.
+
+Now if we can horizontally align the grid-tracks, we can do the same, vertically and there, we use align-content. With the value of center,
+all the tracks moved into the middle of the container, vertically and for align-content, you have all the exact same options as you have in justify-content.
+
+Important: Whenever we have <>-items in the name of prop(align-items and justify-items), that's for the individual items and if we have <>-content in property
+ name, it's gonna align the entire tracks. Then, the align part of the property name always means the VERTICAL direction or the column axis.
+ So align-content and also align-items means the vertical direction or column axis and justify always means that it's the horizontal direction or row axis.
+So that was how we can place our items and our tracks exactly where we want them to be inside of the grid container.
+
+Now let's select .item--6 and make it span across 2 row tracks, so: grid-row: 2 / span 2;
+After doing that, you see that below item--3, there's an empty cell and it comes from the fact that automatic placement algorithm kind of tries to
+keep the sequence of those grid-items in the source code and tries to kind of follow that order in source code, when it places the grid-items on our
+grid and therefore, sometimes that can create these kind of holes in grid and we not always want them, so let's fix it.
+Solution: Go to grid-auto-flow in grid container and add dense value to it. So now instead of grid-auto-flow: row or column set it to
+grid-auto-flow: row dense; and with that we say we want no holes in our grid and we want a more dense grid with no holes and all the items are packed,
+so that all the grid cells are filled with some kind of item.
+In our example by adding dense, you see that the automatically added track because of grid-auto-flow set to row, is now gone.
+Also in before adding dense, you saw another empty cell(a cell without any grid-item in there), next to item--8. But with dense it's gone.
+By using dense, the item--8 is went to empty cell which was next to item--5 and the automatic added row is now gone. So with dense we haven't any holes and
+all items are full packed and we have a full packed grid.*/
+/* 15. Using min-content, max-content and the minmax() function:
+I created 4th project in codepen.
+Explicit grid is what we define with grid-template-rows and grid-template-columns. So if we have 8 grid-items and we just make w rows for our
+grid-system by saying: grid-template-rows: repeat(2, 150px); , then we have an explicit grid and implicit grid and in this case, we would have an
+explicit grid with 2 rows and an implicit grid with 6 rows(why rows? Because grid-auto-flow is set to row by default). So those 6 items are added
+to implicit grid. So because CURRENTLY we ONLY defined 2 cells(yes cells, because by just saying: grid-template-rows: repeat(2, ...); we just
+define 2 explicit CELLS(the default of grid-auto-flow is row)), so the remaining ones are added to the implicit grid which we didn't define.
+So let's now define the columns.
+So far, we have only used real units for defining columns and rows, like px, percentages or the fractional unit. So now let's say:
+grid-template-columns: 1fr 1fr 1fr 1fr; or repeat(...), but let's keep not using repeat() because of the goal of this lecture.
+So up until this point, we always used these normal units there, but there are some new keywords that are associated with css grid that we can use there
+instead and the first one is max-content. if you use max-content of a grid-track, you see that track has the exact width, so that it can ACCOMMODATE
+it's content. So the largest content in that track which we used max-content on it, defines the width(in case of grid-template-columns) of that track.
+So the largest content of a column-track, defines(becomes) the width of that column.
+Learn: So max-content in a column, makes that column as wide as it has to be to fit it's content and in fact max-content also tries not to make
+ any line-breaks.
+Now if you have a lot of content in at least one of the cells of column which the width of that column is max-content, that content would EXPAND
+that column and therefore, that column becomes really wide without having any line-breaks. Because as we mentioned, it tries to make the
+column that it's in it, as wide as possible without having to cause line break in the content and then of course the remaining space is divided for
+those 2 columns in the middle because those 2 middle columns currently(grid-template-columns: max-content 1fr 1fr max-content) have 1fr. So those
+columns because each one have 1fr 1fr, the remaining space of grid system goes to them and will be divide for each of them.
+
+If you use min-content on the column that has a lot of content(which means a lot of width for it's content), that column track, takes the largest
+width(if used on columns) that is needed to FIT it's content inside of itself without overflowing from width of the column, but if there's no height
+or width anymore, well, it's content would be overflow from HEIGHT(if you doesn't set min-content for that cell on it's row).
+So if the content is overflowing in heights(vertical positions) of a cell, you can use min-content on the grid-row-tracks for that cell, so the
+content won't overflow from heights of the cell.
+So if you didn't use min-content on item--8 , then it's width would be the width of it's largest content because of min-content on the column which
+that cell was on it, but because we didn't set any min-content on the ROW which that cell is on it, the content would overflow from height of that cell.
+
+So min-content when is set on column of the cell which that cell was on that column, the width of that cell would be the minimum width which that cell or
+column has to have, in order to FIT it's content without overflowing on the SIDES(because of min-content is set on the grid-template-COLUMNS-so it has
+to do with width which is on the sides). But currently because we defined the rows with a height of 150px, the content of item--8 doesn't really fit anymore
+into the HEIGHT(because the row has very little height which we set in grid-template-rows of grid-container).
+So what we can do is to use min-content (or max-content not in this case!) ALSO, on the ROWS. So instead of using grid-template-rows: repeat(2, 150px);
+which has the fixed value of 150px, use: repeat(2, min-content).
+Now the content first in the height(because of min-content in grid-template-rows) and in the width(because of min-content in grid-template-columns) of
+the grid-cell which that content is in it.
+
+With minmax() function, we pass 2 values in it and then css ensures the track will always stay between these 2 values. So if we pass 100px and 200px to
+minmax() for a column, then css grid will ensure that no matter what happens, that grid column will always stay between 100px and 200px WIDTH(because width
+is associated with columns in grid).
+Important: In grid: Width is associated with columns and height is associated with rows.
+EX) If we had: grid-template-rows: repeat(2, minmax(150px, min-content)); TODO till 9: 20*/
 
 /* My notes:
 The first and last(outer) column and row tracks(lines) never would have gap and therefore they're always thin lines. But if you set some gap
