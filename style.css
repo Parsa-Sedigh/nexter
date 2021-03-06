@@ -703,11 +703,55 @@ With minmax() function, we pass 2 values in it and then css ensures the track wi
 minmax() for a column, then css grid will ensure that no matter what happens, that grid column will always stay between 100px and 200px WIDTH(because width
 is associated with columns in grid).
 Important: In grid: Width is associated with columns and height is associated with rows.
-EX) If we had: grid-template-rows: repeat(2, minmax(150px, min-content)); TODO till 9: 20*/
+EX) If we had: grid-template-rows: repeat(2, minmax(150px, min-content)); , it means, the rows should be at least 150px HEIGHT and at most, min-content.
+So if in one row, you have not much content that wouldn't make more than 150px, then the height of that row would be 150px and if in one cell of a row
+you have a lot of content, then the height of that row would be the MAXIMUM height of all of the cells of that row(so the height of the row in that case
+would be grow. So it would be grew, in order to accommodate to fit all of it's content.)
+
+EX) Let's say we want the first column to always be between 200 and 300px and the other ones should fill up the REMAINING space:
+grid-template-columns: minmax(200px, 300px) repeat(3, 1fr);
+
+With that, even the viewport width gets very small, the width of first column would never be less than 200px. So if the viewport gets very small
+in terms of it's width, it will get a horizontal scrollbar, but the first column would always be at minimum of 200px and in this case, instead,
+the other columns would get smaller and smaller and the first column would have 300px, until the other columns can't fit their content in themselves(if other
+stuff aren't set) and in that case, the first column would start to getting less and less UNTIL 200px.
+
+EX) grid-template-columns: minmax(200px, 50%) repeat(3, 1fr);
+Now if the width of viewport is enough, then the first column would get 50% of width of it's parent which would be a grid-container. Now if we
+start to decreasing the width of viewport, first off, the width of other columns that have 1fr would getting less and less and then if EVEN ONE OF
+CELLS can't fit it's content in horizontal direction in itself(if other stuff aren't set!), then the first column would begun to decreases, BUT IT STILL
+ALWAYS HAS 50% of it's parent's width. BUT AT SOME POINT, there will come a moment or a point, where first column is no longer 50%, but it's 200px.
+Because we said that it should never be less than 200px.
+
+EX) grid-template-columns: minmax(200px, 1fr) repeat(3, 1fr);
+When there's enough viewport width, the width of ALL columns are the same, but as soon as we start decreasing the viewport's width, the width of
+ALL columns also start to decreasing because all of them at that point have 1fr width, but at some point, you see that the first column is fixed at
+200px width, while all the other ones, divide the remaining space between each other. So the first one stays at 200px(if there's no more space!) no
+matter what happens and the others take up the remaining space equally UNTIL there isn't enough space for one or more of those other ones and then,
+the ones with wider content will get the width they NEED while other ones still can decrease their width until they ALSO hit their content width and after
+that(when there's no column to decrease it's width), we would get scrollbar(if no other stuff are set!). So when a cell hit their content width and can't
+no more decreases it's value, it would be wider than the other cells that can STILL decrease their width, when the viewport decreases. But we set
+1fr for all of them in this case, right? Why some of them would be bigger?(So this effect would happen, if we EVEN set all of them to 1fr, because
+we EXPECT to all of them get same width at any moment right? NOO!)
+But why is that? Why the columns that have 1fr decrease their width as the viewport width decreases, UNTIL they hit their content width and no more can
+decrease their width from that point?
+Because the css grid specification says: A fractional unit fills up the entire REMAINING space but it is NEVER smaller than the minimum content of a row
+or a column. So ideally, all of those columns that have 1fr should be all the same, because they're all 1fr, but at the limit, when one of those columns can't
+get smaller because of it's content, then that fr unit OF THAT CELL! simply takes the minimum width that it NEEDS to fill the column without overflowing(in case
+of columns, overflowing to new linens of content in that cell).*/
+/* 16. Responsive Layouts with auto-fit and auto-fill:
+We're gonna look at aut-fit and auto-fill keywords and how build responsive layouts with them, without writing a single media query.
+EX) grid-aut-columns: repeat(4, 1fr);
+What if we wanted to adapt the number of items that we have? So instead of number in the first arg, we use aut-fill
+TODO
+Learn: aut-fill automatically creates as many tracks with the desired width that we specify as the second arg of repeat() for example, as fit into the
+ (grid-)container..
+
+auo-fit actually collapses those tracks and gives it a width of 0.*/
 
 /* My notes:
 The first and last(outer) column and row tracks(lines) never would have gap and therefore they're always thin lines. But if you set some gap
 for inner tracks(all of the tracks except the first and last are inner tracks or lines), they become thicker and are no more like lines but in the
-explicit grid, they have height of 150px.*/
+explicit grid, they have height of 150px. */
 
 
