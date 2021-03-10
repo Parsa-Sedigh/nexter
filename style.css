@@ -741,13 +741,66 @@ get smaller because of it's content, then that fr unit OF THAT CELL! simply take
 of columns, overflowing to new linens of content in that cell).*/
 /* 16. Responsive Layouts with auto-fit and auto-fill:
 We're gonna look at aut-fit and auto-fill keywords and how build responsive layouts with them, without writing a single media query.
-EX) grid-aut-columns: repeat(4, 1fr);
-What if we wanted to adapt the number of items that we have? So instead of number in the first arg, we use aut-fill
-TODO
-Learn: aut-fill automatically creates as many tracks with the desired width that we specify as the second arg of repeat() for example, as fit into the
- (grid-)container..
+EX)
+we have 8 grid items in html and this rule:
+grid-aut-columns: repeat(4, 1fr);
 
-auo-fit actually collapses those tracks and gives it a width of 0.*/
+But what if we didn't want to specify that EXACT number for number of columns there?
+What if we wanted to adapt that first arg to number of items that we have? For example, let's say we put 100px instead of 1fr in the example, that
+would create 4 columns those columns each would have a EXPLICIT width. But imagine if you want it to have eight columns there, but instead of
+writing 8 explicitely, we wanted that to happen AUTOMATICALLY and that is where auto-fill comes in. So instead of number there, we can write: auto-fill and
+then css grid is gonna automatically create 8 tracks for us and ACTUALLY IN FACT, it's not just 8 tracks(it's won't just create tracks as equal as
+the grid-items that we have), it creates 10 tracks! and why 10 and not equal to number of grid-items which in this case is 8?
+That's because our container is 1000px and we speicifed that we wanted 100px columns and so 1000 divided by 100 is 10 and therefore, it then creates
+10 column tracks and then after that, it puts our items in there.
+
+Learn: auto-fill automatically creates as many tracks with the desired width that we specify as the second arg of repeat() for example, as fit into the
+ (grid-)container and in this case, that's 10 tracks.
+
+Now what's different between auto-fill and auto-fit?
+Now if we use auto-fit in our above example, it actually STILL created the 10 columns and how we can see it? By seeing the column-lines number in devtools.
+So if you see that, you'll see the number of LAST line number which is 11(the column line) and this means the grid actually has 10 columns.
+Learn: So you can see it's 10 columns because it ends at number(LINE NUMBER) 11. But what auto-fit does is that it collapses those tracks and gives it
+ a width of 0 which then would create that extra space that you can see(because it created 10 tracks but as you can see in line numbers, but for those
+ 2 tracks, it gives them a 0 width).
+ So basically it is, as it only created really 8 tracks and actually in devtools of firefox and in it's layout section, you can see that we have
+ only 8 column tracks but the last column-line-number is 11! So it creates those tracks and then leaves that empty space there which we can then fill,
+ if we want it.
+Important: So with auto-fill, it creates 10 columns, so as many as fill in there, while with auto-fit, it STILL creates those 10 columns, but then
+ collapses the ones that are empty to have a width of 0.
+ (The empty ones, means if we have 8 grid-items and the specified width for each of those items is 100, that means
+ we would have 200px empty space which would be an empty space, because the auto-fit makes 10 column tracks but then make the width of those 2 column tracks
+ which with those 2 we would have full width of container, to 0.)
+
+auto-fit actually collapses those tracks and gives it a width of 0.
+
+What this allows us to do is to use minmax() function as the second arg which would make a beautiful solution.
+EX) 8 columns in html
+grid-aut-columns: repeat(auto-fit, minmax(100px, 1fr));
+
+With that, it occupied our entire grid-container EVEN with having 0 width for those last 2 columns in this example! So basically filling that
+extra empty space that was left over, by expanding those columns into MORE than 100px of width(because they're now 1fr).
+Now let's see what happens as we decrease the width of viewport. As you start reducing, for example if we reduced to 831px, I mean the container has
+831px width, we can STILL fit the 8 columns in there, right? Because each column has to be AT LEAST 100px. So 100px has to be the minimum of each
+column and right now we have 831px, so we can still fit 8 columns in there. But if you decrease further, the last grid item moved into the next line
+and that's because right now we only have 7 columns there because we only have 796px width for grid-container, so we can no longer fit 8 items with
+100px each in one row, because for that we would need at least 800px and so what auto-fit here(when there isn't enough space for all items
+to fit in one row (or column)) does, is that it creates instead of 8 columns, 7 columns and this would keep happening as we decrease that further.
+
+EX) 8 columns in html
+grid-template-rows: repeat(2, minmax(150px, min-content));
+grid-aut-columns: repeat(auto-fit, minmax(200px, 1fr)); and current width of container is 1007px:
+we would have 5 columns on the first row and each of them has 201px width and as we decrease it, we no longer have enough space for 5 columns and
+so we end up with having 4 columns in each row which each would have still above 200px limit. Now by decreasing it further, we would have 3 columns in a row,
+because it no longer has the space. Again, container has 797px, it no longer fits 4 columns with each having 200px wide, because for that,
+we need 800px, which we don't have anymore(we now have 797px) and so we have 3 columns in one row which means 3 columns.
+Now you can see tht we have the third row which hasn't much height because it isn't styled(it's an implicit row) because in our example we defined 2
+EXPLICITELY rows, so that third line is an implicit one, so let's
+style it:
+grid-auto-rows: 150px;
+
+So our layout is responsive without writing a single media query. So the trick with auto-fix and minmax(<fixed number>, 1fr) which has
+a fixed number and 1fr is a good trick which will then automatically adapt to the screen size, without having to write media queries.  */
 
 /* My notes:
 The first and last(outer) column and row tracks(lines) never would have gap and therefore they're always thin lines. But if you set some gap
