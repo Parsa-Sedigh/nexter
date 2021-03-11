@@ -1,0 +1,952 @@
+@charset "UTF-8";
+/* Global reset: */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+  /* We're gonna inherit that from the html element. */ }
+
+/* In html element css rules, we set our overall font-size. In this case, with that, 1rem equals exactly 10px.
+16px is the browser default.*/
+html {
+  box-sizing: border-box;
+  font-size: 62.5%; }
+
+/* Global font-settings on the body element:
+We choose gold color for our brand as our primary color, because it's luxury homes then the secondary-color is a very dark blue which
+plays very well with that gold color and then we have the lighter greys and also the darker grey colors as always but in darker greys,
+we have a color which is also like brown a little, because that compliments the primary color in a bit better than if you would just have used
+a pure black-based gray for $color-grey-dark-2 . So you see that the $color-grey-dark-2 is close to the gray sides but ALSO in a bit in the
+golden part of the color spectrum.
+
+We are ABLE to use 300 as font-weight because that's what we included from the google font. Because for Nunito which is the $font-primary, we
+included 300 and 300i(italic) from google fonts.
+We use josephine sans for titles and the nunito font for overall font-family because it's a bit more neutral.*/
+body {
+  font-family: "Nunito", sans-serif;
+  color: #6D5D4B;
+  font-weight: 300;
+  line-height: 1.6; }
+
+/* Let's see how many rows we want? The first row is the header and the realtors which is next to each other inside one row and the height of
+this row is actually a percentage of the viewport height. So if you decrease the height of viewport, then you will see that the height of the
+container(first row???) adapts as well. So the size of that first row is in viewport height units. So the first row track should have height of
+80vh. So right now, we have an explicit grid with only one row and all the other items will be added in the implicit grid, so the items
+that don't have any space in this one by one grid(grid-template-rows and the actual rows, have a one by one relationship right?). So right now
+we only defined one row*.
+Now let's go define the second row which is the features section. Now how do we want that row to be sized?
+Well we simply want it to contain the content! and if we increase this content, we of course want that row to grow with that content.
+That means, if we decrease the width of the viewport, the content will be go to the next lines, right, so the HEIGHT of the content would
+grow. So we also want the row to grow it's height with it's content.
+So when we decrease the viewport width, the content would grow so we want the row to grow with it. So how we do that?
+We want that row to have min-content for it's height(yes height, because we're specifying the grid-template-rows which is for HEIGHT of rows)
+In this case, we could also use auto for that row(instead of min-content) and auto is actually the DEFAULT. So if you don't specify anything,
+it would be auto,Important: so auto also means that it adapts to the content(just like min-content) and in this case(our second row),
+it really is the same. So we can write min-content or auto for the second row. Because either way, it's gonna mean that there will be
+enough space to FIT all the content. Currently, if you say min-content or auto, that's not gonna change anything, because right now,
+the content of the second row is just a little text. So the row won't grow to fit equal to it's content, actually it does, because that little text
+also gets some space right? So the row will grow to fit it's content.
+Important: The row is associated with height and columns are associated with width.
+
+Let's go to third row and this row is actually not a function of the viewport height, but the viewport width. So if we decrease the viewport
+width, the size of that row is adapting to the viewport and that means we're using the viewport width unit. (40vw means 40% of viewport width)
+and so as you're seeing how crucial it is to think about responsiveness, right from the beginning of defining our grid tracks and columns(row
+tracks and column tracks). So we don't use px, but we're using the units that make sense for the content that we're putting in that track and
+units like vh or vw are crucial units to use in a real word scenario.
+In exercies we usually did use some fixed size for columns and rows, but in real world, we don't always do that, so we use units like vh and
+vw and we also want the rows to adapt to the content by using min-content(especially in the rows we use this min-content keyword and not so much
+in the columns). So in the rows, it's sometimes useful to LET them(why let them? Because with that, they will ADAPT themselves to height of they're
+content) have the height of the content.
+
+Next row, we also want it to have the height of it's content, so use min-content and in gallery(the row that have the gallery section),
+we also want it to have the height of all of those images(which are it's content) together and the same thing for footer.
+So we're not gonna define any static value for the height of rows.
+
+Yes we used a width related unit(vw) for height of one of the rows, but even with that, it means that row will have a HEIGHT(and not width) of 40%
+of the viewport's width and if the width of viewport decreases, the height of that row also decreases.
+
+Instead of repeating multiple min-content here, we used repeat().
+
+You can also imagine that we put fixed pixel values in grid-template-rows and imagine what would happen if we then started to resize our window.
+So if the users viewed the page from a phone or from a tablet. By doing that, we of course should used media queries to adapt in that situation.
+But it's better to think responsive right from the beginning and size the rows and columns in a responsive and flexible way right from the start.
+
+Now we need to define our column tracks and that's more complex than defining our row tracks. Let's leave it to next lecuture as well with the
+PLACEMENT of all our grid-item in the correct position.*/
+.container {
+  display: grid;
+  grid-template-rows: 80vh min-content 40vw repeat(3, min-content); }
+
+.sidebar {
+  background-color: #c69963; }
+
+.header {
+  background-color: #54483A; }
+
+.realtors {
+  background-color: #101d2c; }
+
+.features {
+  background-color: #aaa; }
+
+.story__pictures {
+  background-color: #c69963; }
+
+.story__content {
+  background-color: #f9f7f6; }
+
+.homes {
+  background-color: #101d2c; }
+
+.gallery {
+  background-color: #54483A; }
+
+.footer {
+  background-color: #101d2c; }
+
+/* 1. section intro
+CSS grid layout module or in short, css grids.
+
+2. Why css grid, a whole new mindset
+A whole new mindset:
+What are css grids?
+-CSS grid layout is a brand new module that brings a two-dimensional grid system to CSS for the first time. The grids changes
+ everything, like: how we think about layout, how we write our css and even how we write our markup in html.
+-Css grids replaces float layouts, using less and more readable and logical css and html.
+-Css grids works perfectly together with flexbox, which the flexbox is best to handle ONE-dimensional components and layouts.
+-Css grids completely changes the way that we envision and build two-dimensional layouts.
+
+CSS grid terminology:
+        Css grids                                   flexbox                                         normal css
+                                            (default axis with flex-direction: row)
+        |-----------------> row axis                  ----------------> main axis                   ------------> x
+        |                                             |                                             |
+        |                                             |                                             |
+        |                                             |                                             |
+        |                                             |                                             |
+    column axis                                   cross axis                                        y
+
+display: grid;
+(display: inline-grid;)
+Just like we have a flex container in flexbox, in css grids, we have a grid container and we create a new grid container,
+by setting the display prop of an element to grid. Then ALL of the DIRECT children of that grid container become the grid items.
+The axes in grids are ALWAYS THE SAME and you CAN'T change where they are like what we do in flexbox.
+
+The vertical and horizontal lines that divide up the grid and separate the columns and rows, are called the grid lines and they are
+automatically numbered for the columns, as well as for the rows and those grid lines start from one, all the way to the number of rows plus
+one and the number of columns of course. So if you have 3 columns and 2 rows, then you would have 4 grid lines vertically and 3 grid lines
+horizontally.
+
+The actual space that is between the rows and columns is called the gutter and the row gutter can be different from the column gutter.
+What are the grid rows and columns actually?
+Important: Well, the space(without the gutter) between two grid lines is called a track, no matter if it's vertical or horizontal. If it's horizontal,
+ then it's called a row of course! and if it's(the track) vertical, then it's called a column.
+
+The area between two vertical and two horizontal grid lines is called a grid line and if that area is between two adjacent grid lines and
+two adjacent column lines, then that area is just called a grid cell.
+
+Css grids property overview:
+GRID CONTAINER:
+1)
+grid-template-rows      |
+grid-template-columns   |   grid-template
+grid-template-areas     |
+
+2)
+grid-row-gap            |
+grid-column-gap         |   grid-gap
+                        |
+
+3)
+align-items
+justify-content
+align-content
+
+4)
+grid-auto-rows
+grid-auto-columns
+grid-auto-flow
+
+GRID ITEM:
+1)
+grid-row-start          |
+grid-row-end            |   grid-row: <grid-row-start> / <grid-row-end>     |
+                        |                                                   |
+                                                                            |  grid-area:
+grid-column-start       |                                                   |  <grid-row-start> / <grid-column-start> / <grid-row-end> / <grid-column-end>
+grid-column-end         |   grid-column                                     |
+                        |                                                   |
+
+2)
+justify-self
+align-self
+
+3)
+order
+
+3. Quick setup for this section
+
+4. Creating our first grid:
+In .container>.item.item--1*6 emmet code, the *6 part will replicate the .tem.item--1 part of emmet code, 6 times. So with that emmet,
+we would have one <div> with class of container and 6 div with classes of item and item--1 in there. Now the problem with that is, each
+of those 6 items will have the number 1.
+Learn: But in emmet we can use $ and that $ will get replaced with the current number.
+
+When you make an element, a grid container, nothing really changes(in opposite of display: flex; which makes the children of that container,
+sit next to each other in main axis). That's because we didn't define any columns or rows.
+By using grid-template-rows, we can define our rows. So let's say we want our six elements that we have currently, to be divided in 2 rows and
+3 columns(so 2*3=6). So we want 2 rows and 3 columns and in grid-template-rows we define our 2 rows and we want the first row to be 150px and
+the second one also 150px. So grid-template-rows: 150px 150px;
+
+So in grid-template-rows, we define the height of our rows. Now let's do the same thing for columns. So use grid-template-columns.
+So now our elements inside that grid-container, have 150px width and 150px height.
+After those two props, we say our elements are now already laid out as a grid.
+
+In firefox, after clicking on the grid icon on grid container, you can go to layout tab to see it better.
+
+In grid, column LINES(yes the line ITSELF and not the area that it makes with row lines) and row lines, get automatically numbered and in
+layout tab of firefox, you can turn on the display line numbers on the grid container. Remember, if you set some gaps for lines, the INNER(because
+the first and last line numbers, well, they can't have gap right??? Because those outer ones are the bounderies of grid layout)
+lines can have some space, so they're not a thin line number anymore.
+
+We can also have space BETWEEN the grid items(the children of a grid container) and that space is called gutter which can be defined for
+columns and rows and we can define it by using grid-row-gap(for rows). This prop is defined on grid CONTAINER.
+
+If you want the same gap for columns and rows, instead of writing both grid-row-gap and grid-column-gap, you can use grid-gap.
+
+So you make those 6 elements in a grid layout. If you wanted to do it without grid, we would have to have just a wrapper for
+the upper 3 items and a wrapper for second 3 items. */
+/* 5. Getting familiar with fr unit:
+We can do better when we're defining our rows and columns one by one in grid-template-rows and grid-column-rows. So imagine we had 5 rows
+and each of them width height of 150px, it wouldn't be good them to define all of them one by one. That's why in css grid, we have a new
+function called repeat() and inside of () of it, we specify the number of rows and columns(depending on we're using repeat() in grid-template-rows
+or grid-template-columns) that we want and then specify the height(if you're specifying rows) for all of them(of course we use repeat(), when
+the height(for rows) or width(for columns) of all of them are equal.).
+Important: When you say: repeat(2, 150px); you're creating 2 tracks and if it was used in grid-template-rows, you're creating 2 tracks for rows.
+Ex) grid-template-rows: repeat(2, 150px); means 2 rows with height of 150px and it's equal to have: 150px 150px
+
+Ex) Let's imagine currently we have grid-template-columns: repeat(3, 150px); but now we want the third column to have 300px and not 150px.
+What we do now?
+grid-template-columns: repeat(2, 150px) 300px;
+
+What if we wanted to make the last column occupy the rest of the grid container?
+This can be done in flexbox by using flex: 1; and with that, the flex item would expand and occupy all the possible space. In grid we haven't a
+prop like that, but we have a similar functionality. In this case and in grid, we need to use fractional unit.
+Important: So you can use 1fr for the width of column you want it to occupy the rest of the grid container in the grid-template-columns prop.
+Learn: 1fr is a fraction of the available space.
+Recap: When you have grid-template-columns: repeat(2, 150px) 1fr; , we define 3 column tracks. The first one will have 150px, the second one also
+150px and the last one is 1 fractional unit and the fr represents a fraction of the available space. So it takes all of that space, when we set it
+to 1fr.
+
+Also there's other way of using fr unit. When you say: grid-template-columns: repeat(3, 1fr); with this, we have 3 tracks each of them with 1fr and
+by saying that, each of those three column tracks has the same width(because we used repeat() for them) and by using 1fr for all of the
+tracks, we can divide the entire space in 3 parts.
+So in grid-template-columns: repeat(3, 1fr); we have 3 columns, all with the same width.
+
+Ex: grid-template-columns: 1fr 2fr 1fr; with this, the second column is double the size of the first column and last one. Why is that?
+Because 2 is double of 1. So because we're using fr, all the empty space is divided and then 2 of the fractions are assigned to the second column and
+then 1 fraction of empty space if assigned to first one and 1fr is assigned to last one.
+
+Ex) When we say grid-template-columns: 1fr 3fr 1fr; , the available(because we're using fr) space is divided into 5 parts(1 + 3 + 1 = 5).
+EX) When we say grid-template-columns: 1fr 3fr 3fr; the second and last one are three times bigger than the first one.
+Ex) In grid-template-columns: 50% 1fr 1fr; let's imagine the grid container has 1000px width, then the first column has 500px. So what we
+realize is, the percentage unit doesn't take the gap into account. So basically it takes 50% of the entire width of grid container and then the
+rest is for other columns and also for the gap. So if you make it to have 80%, you see the column with fr units become narrower. Because now
+the first column becomes larger and the gaps are still the same(because we didn't change the gaps between columns), therefore the columns with
+fr units become narrower.
+
+Ex) In grid-template-rows: repeat(2, 1fr); and by having the grid container with 1000px height(why I say height here? Because rows are in relation to
+HEIGHT of grid container and the columns are in relation to width of grid container, so when we set a number in grid-template-rows, it's in
+relation to height of the grid container and when we set some numbers in grid-template-columns, they're in relation to WIDTH of their grid container.)
+now each of the rows occupies all the space it can, in order to fill up the height of the container. So the entire height of container is
+the gap between rows and the height of rows. So we have 2 rows with the same height and they're occupying the entire height of their container.
+
+We used fr unit, more on the columns than rows.
+
+Now let's place the grid items exactly where we want them to be on the grid. Because currently, all of those items are automatically placed
+in the order which we have them in the html source code. But we can change that.
+
+6. Positioning grid items:
+When you want to position items, remember to turn on the line numbers in firefox devtools.
+Right now, all of our grid items are laid out according to their html source code order and if you see the result, the reason for positioning of
+those grid items is for css grid's automatic placement algorithm and the default behavior is that the items are laid out just like they are in the
+html code.
+
+Learn: A grid cell is the area between two adjacent row and column lines. In the codepen, the grid cell number 5 is the area between column line 2 and
+ column line 3 and the row line 2 and row line 3.
+
+Currently we want to put item number 1 in the place where item 5 sits. How we can do that?
+That's when the line and row numbers come into play!
+First let's go to the item1 and define a couple of props. First we define grid-row-start and set it to 2 for that item.
+Learn: In grid-row-start we specify the number of row line which in that row line we want the cell to start.
+Right now, we want to put cell 1: Orange in cell 5: Blue and as you can see, the cell 5: Blue, starts at row line number2, so for placing that'
+1: Orange in there, we specify it's grid-row-start to 2 and with that, the item which has that prop(in this case, the 1: Orange), moves to the
+second row.
+Important: So with grid-row-start: x; the item that has that prop with x value, starts from xth row.
+
+After that, we set grid-row-end to 3 for that item--1 so with that, we wrote a cleaner solution(although without specifying that, we get our
+desired result in that case.)
+Important: So by saying grid-row-start: 2; and grid-row-end: 3; , we say that grid item which we define these props for that, should be placed in
+ a cell which that cell starts by row line number2 and ends at row line number3.
+So now, the item--1, moved to the second row(because of grid-row-start: 2;) and then the other item which before was placed in the cell which NOW,
+the item--1 is sitting there, move up in the place where item--1 was sat there before. In other words, their cell was swapped.
+
+Now we need to kinda shift the cell-1 in column axis to place it where currently cell-5 sits. So let's use grid-column-start and set it to
+2 and then for cleaner solution, set grid-column-end: 3; so now with that, we've placed our item exactly in the grid cell we wanted.
+
+Also there's a bit easier way to do that and instead of grid-row-start and grid-row-end we can say: grid-row: 2 / 3;
+So grid-row is shorthand for grid-row-start and grid-row-end.
+
+Now let's position 5: Blue instead of 4: Pink . So let's go where we select the number 5 cell and then specify grid-row and grid-column for it.
+Now what about values?
+Currently the 5: Blue cell is in the second row or in other words, between row line 2 and 3 but we want it to be between row lines of
+1 and 2. So grid-row: 1 / 2; Important: now with that, it moves to first row. Because the grid-row-start is set to 1, so it goes to first row.
+
+Also instead of saying grid-row: ...; and grid-column: ...; there's a shorthand for it which is grid-area.
+Also there are actually more ways of positioning items in grid.
+
+We placed 6: Brown cell in where currently 3: Violet lives. So let's go to 6: Brown and say: grid-row: ...; and grid-column: ...;
+After doing that, there's no gurantee that those items will SWAP in where in the past, the other one lives. So if 6: Brown goes to where
+3: violet; lives currently, there's no gurantee that the places of them actually swap. So maybe 3: Violet goes an other place after the other cell
+comes into it's place.*/
+/* 7. Spanning grid items:
+Let's see how span grid items across multiple grid cells in order to occupy entire areas. So items can occupy multiple cells and by default,
+each item in the beginning occupy 1 cell.
+So suppose we want that violet item not only to occupy that single cell, but to span across those 2 cells(one cell is the cell where currently
+is there and the other one is the current 1:orange cell.) How we do that?
+So far we only placed grid items into single cells and therefore the end is always the beginning + 1.
+Important: So when an item has just one cell we can say: end of item(not cell!) = beginning of item + 1 and the end and beginning means the
+ grid-row-end or grid-column-end and beginning means grid-row-start and grid-row-start. In other words, when an grid item has 1 cell(which by
+ default is), the grid-row-end = grid-row-start + 1 and that's true also for column. Therefore so far, we always had grid-row: <x> / <x+1> or <x+1>/x
+ and also that's true for column. So only one column and one row which that one column and one row result in one cell which we had so far.
+But what if we put a higher number?
+If we do that, the element would simply occupy more space(more cells and also the gap between those cells too!).
+So for example let's say we want the 1: Orange to start at column num2 and end at column num4.
+Important: So when a grid item occupies more than 1 cell, yes! it actually maybe occupies 2 or 3 or ... cells, but also the gap between those
+ cells.
+
+Now what about the grid item that was in that cell which now belongs to 1: Orange grid item?
+Well, it simply moved down. Because that's what the css grid algorithm does. So if we have more items than the number of cells in a row(or
+when we end up with more items than the available space, so the available space isn't enough for our items), then css grid will automatically
+add a new row or a new column. But in this case, just a new row and that new added part(in this case a new row), called an implicit grid.
+
+Now if you make 3: violet to span 2 cells, it will go down, to a new line and also 4: pink will do the same. WHY?
+Because we also placed another element (1: Orange) in where the other element which is now explicitely positioned. But we want to also
+EXPLICITELY place the other element in where another EXPLICITELY positioned element exists! But that doesn't work and therefore the new
+explicitely positioned element goes to find a new place. But if you really want to make the other one to be in that place and not the other
+element which currently is in that place, we need to explicitly set the row number(or the column number. But when use which? If you CURRENTLY
+set column and you don't get the desired result, you need to explicitly set the row(start and end) number for the item that you want to
+place it where another item currently sits there, but if you set row and didn't get the desired result, you need to explicitly set the
+column-start and end number for that item) for the element we want to be in that place which currently another element lives in that place.
+Now if you do that and explicitly set the row-start and row-end(which means it was positioned with column props but we didn't get the
+desired result by just specifying the column props for that element) for the element that you want to position it in where the other
+explicitly positioned element currently sits there, you see that the other one which was before in that place, goes under the new one(the one
+we set both column and row props to position it exactly where we want).
+So what that means, is we can actually have multiple grid items in the SAME CELL(or cellS, if the item was expanded).
+
+So maybe one EXPLICITLY POSITIONED item which expanded to 2 cells gets on top of another POSITIONED item which just has 1 cell, like our
+code in codepen.
+
+Now if you want the other one which currently is under another positioned element, to be on top of the other one, you can give it a higher z-index.
+
+So that was one way of spanning items across multiple cells. But there's another way. So let's do that with the 2: green item and currently
+it's not positioned at all and that's perfect to show how it works. Now we want it to be from column1 to column3. So we could say:
+grid-column: 1/3; and after that, because we have another positioned item(if it was not positioned, there was no problem and actually this item
+would go down, instead of our current item that we want to position it) in the place where we want it goes to the last line in our grid layout
+inside the grid-container, so we need to ALSO explicitly set it's row props(start and end).
+
+So instead of that, we can say we want it to span across 2. So: grid-column: 1 / span 2; instead of grid-column: 1 / 3;
+Learn: So span x; means it must span across x cells. For example, grid-column: 2 / span 2; means the grid item must start at column num2 and
+ span across 2 other cells in the column direction(because we're using column prop).
+
+if you used span y and you see that it creates a new column or row, that's because for example you defined 3 columns and with that span 2,
+you go one column further which it wasn't defined and that new column is completely empty, because we didn't define any width for it, but it
+still tried to kinda create a new column there. So if you're not really sure what to put in the span <y>, there's actually even another way for
+spanning items over multiple cells.
+
+This approach is for when you don't remember how many columns(in this case) we have. All we know is that we want that grid to be ALL UNTIL THE
+END and in order to represent the end, all we have to do is to say: -1. So when you want an item go till the end, instead of hard coding
+how many cells we want to occupy by using the span <x> approach, we simply put -1 and then it goes all the way till the end.
+
+In example below, we say the item should start from column number2 and go all the way to the end.
+grid-column: 2 / -1
+
+So for spanning items we use 3 ways(which in all the ways, we use grid-row or grid-column depending on you want to span the item in row direction or
+column direction):
+Actually there's 2 way and the third way is for special use case.
+1) We define the END(because we want to span the item right?) number of the row or column line.
+2) Use span keyword which actually is better than the first approach
+3) (IF you want to span the item all the way till the end of grid) use -1.*/
+/* 8. Grid challenge:
+The right sidebar, is slightly more narrow than those 3 columns next to it. So we need to define the width of the sidebar column and then
+divide the remaining space for the other columns or the other tracks and the header and main content and footer, we'll also have some spanning
+going on(because they have multiple cells).
+
+Also we have the SAME gutter for rows and columns.
+
+9. Grid Challenge A Basic Solution:
+Learn: For selecting all the DIRECT children of an element(the container of those elements) at the same time, we say:
+ <select that element which is direct container of the elements that we want to apply styles to all those direct children> {
+  & > * {
+   }
+ }
+
+First define display: grid; on the .challenge to make it a grid container.
+In the challenge, we have 4 columns, 1 column for each of the small boxes and then 1 column on the side, for the sidebar and also
+we have 4 rows. So let's define grid-template-rows: 100px 200px 400px 100px;
+So the header row, has 100px height.
+
+When defining the columns inside .challenge, remember that the sidebar was a bit smaller than the rest of the columns and what we want, is to have
+three equally sized columns and then one smaller one. So say:
+grid-template-columns: repeat(3, 1fr) 200px; .
+So sidebar will have 200px width(because we're defining the columns) and then, the REST of the space will be divided for the three other columns and ALSO the
+gutter.
+
+With those definitions, we have 4 column tracks and 4 row tracks as well.
+Currently we have 7 grid items, but we don't see the rest of the rows and the column tracks(currently we just see 2 rows and all our columns which are 4 columns) and
+therfore, only the first 2 rows of our defined grid-system is currently filled with items and that's because we haven't enough items to fill all of the rows. But
+that's not a bug or an error from us, the developer! It's intended. Because we want to actually give 2 rows to 2 grid-items(header and footer), so by doing that, all
+of the rows will be filled.
+Important: So in the beginning, if you don't have enough items or actually plan to don't having enough items, all of the rows or columns might don't get filled and
+ in 90% of situations, that's intended, because we want to give for example the whole of a row or a column to just 1 item or 2 items and... and therefore, at the END,
+ definitely all of the rows and columns will be filled(or maybe the unfulfillment of some rows or columns are actually intended by developers!).
+
+So currently we see those empty grid-cells which were actually created with our grid track declaration. We just don't have enough grid items to fill all of those
+cells. But don't worry, we're gonna care about that now! So let's start by POSITIONING all our grid items.
+
+First thing to do, is to make the header <div>, span all the way from the first column line to the last one. So select that grid-item and say:
+grid-column: 1 / -1
+
+Important: The trick for go ALL THE WAY to the end of the grid-system:
+ 1) Use span <number of columns or grid to go to the END of grid-system>
+ 2) use -1
+
+Now with just making an item or some items to span all the way to end of grid-system, that possibly will make the other items to go downward and fill the remaining and
+empty rows and that will make our kind of problem to nearly be solved.
+
+After making the header go all the way from left to right, notice we didn't actually have to declare the grid-row property there. Because the automatic placement
+algorithm, takes care of putting the header right in the first line, because it's actually the first element in the markup as well. So that's automatically placed there
+and we don't have to declare the row props too! and the same actually applies to our small boxes. Because they're already exactly where they should be, so we
+don't have to do anything. Because again, automatic placement outs them, where we want them to be.
+
+The sidebar should spans across those 2 cells starting from row number2. So select the sidebar first. After setting the grid-column or sidebar, it's position is
+not still correct, because we want it to start from row number2. So let's set grid-row for it explicitely(so we had to define BOTH column and row props for it,
+in order to set it exactly where we want it to be).
+
+
+Now we must make the main-content <div>, spans 3 cells from column1. So select main-content <div> and all we have to set for it, is the column prop. Because the row
+prop for it, is already correct(it's already in the correct row and therefore, all we have to do is to manipulate its position in the column prop).
+
+That layout is hard to build in old-school fluid layout.
+There are basically 2 more ways to position grid-items on the grid.*/
+/* 10. Naming Grid Lines:
+Let's look how we can position grid items on the grid, by naming our grid lines. Before this lesson, we looked at how to position grid items on the grid,
+by using the automatically generated grid line numbers. But we can make our lives easier by NAMING those grid lines.
+So method 1 is line numbers. Now let's comment out all of the code that we wrote for the challenge which we wrote with method 1 of positioning.
+So let's start from scratch. Now copy the code you had before and paste it for method2.
+Learn: For naming our grid lines, we can use: [<name of the line>] . So when we're defining our grid lines(so inside grid container or the element or selector that has
+ display: grid;), therefore, when we're saying like: grid-template-rows: ... or grid-template-columns: ... or when we're actually DEFINING our lines(whether column lines or
+ row lines), we can give each of them a name, before specifying their value.
+ Also remember: When you have specified n values as rows of a grid container, you would have n + 1 line numbers for rows and 2 of those line numbers would be
+ edge numbers.
+The best practice for naming grid lines is to describe the content that will be IN the track. So in our example, we wanna name the content between line number 1 and
+2 and because the content inside those 2 line numbers, is our header, I named the track, header and after doing that, say whether it's the start or the end.
+Learn: So the naming of grid lines is based on 2 factors:
+ 1) The content that would go inside that line number(the one we're CURRENTLY naming it) and the next line number.
+    So in this case, the content that would go between (line number 1 WHICH HAS 0 HEIGHT! BECAUSE IT'S AN EDGE LINE NUMBER!!!) and 200px(line number 2) is our header.
+ 2) Is the current line number, the beginning or the end of that content? If it's the beginning, give it -start at the end of it's name and if it's end, give it: -end.
+ In this case, we gave the first line number(which isn't explicitely set, because it's an edge line), the name of header-start and the next line number, header-end(which is
+ the line number after traveling 100px).
+EX)
+grid-template-rows: [header-start] 100px [header-end] 200px 400px 100px;
+
+So now, the line number1, which is an edge line, is no longer JUST called line number 1, but it's ALSO called: header-start and the second line, is called header-end.
+NOW WAIT!!!
+What about those small boxes there?
+We named the line that is the beginning of those boxes, header-start, but this name doesn't fit the content that we have(those boxes)! So what we do now?
+The second line is the header-end, but simentinously, the start of those small boxes!!! In other words, it doesn't make sense that that line there, is called header-end,
+because it's not JUST the end of the header, but ALSO the start of those small boxes and so for that reason, we can actually give a line, more that one name.
+So those are arbitrary names that we come up with(at least the first parts of the names are arbitrary!- for example, box name is arbitrary) and then we just
+call the line, before the boxes, start, and the line after the boxes, end.
+So the second line number(which is the line, in between the header and the boxes), is now  only called header-end and also, at the same time, is called box-start.
+
+It's a good practice to name line numbers and then use those names, to position the grid-items in it and we're gonna do the same thing for column tracks, because remember:
+Important: In a grid-system, we have 2 kind of lines(tracks === lines): row-lines and column-lines .
+
+For USING those names, instead of using the numbers of lines, we just use their names. Also instead of using span 2 or -1 for spanning the grid-items, we can use
+the name of lines that those grid-items. ends.
+
+In our example in codepen, footer class, doesn't use(need) the row declaration(grid-row prop), so we can't use row line names for it. So in fact,
+we wouldn't maybe really have needed to define all of those names for row lines!
+
+In column tracks(lines), we have a different situation. Because when we were defining the column tracks for our grid-system, we had that repeat() function there,
+which is gonna create three column tracks there with ONLY that 1 defenintion(with only using a function). So we haven't multiple values for column lines,
+so that we can name EACH of them separately.
+
+Remember: Therefore, it wouldn't make much sense to put the line name before the repeat() function and then after it. Because by doing that, ONLY the
+lines before those 3 lines which are created by repeat, and after those 3, would get a name. But we want ALL of the lines to have a name. So what can we do?
+Well, we put the name into the () of repeat() ! and in this case, we're gonna call those 3 lines which are created by repeat() , col-start and also col-end(why?
+again, because one line, is the end of previous column and also the start of next column, so we give it two names.).
+In the example, it will create a so-called: named set of grid lines.
+So with that(repeat() function with having 2 names), we create 3 columns and each of them starts with a line called col-start and one with col-end and that
+would mean, that we would have CONFILICTING line names. RIGHT?
+And so what happens, is that for the first column, it's gonna be called: `col-start 1` and `col-end 1`, then for the second
+column track it's gonna be called col-start 2 and col-end 2 and ... .
+Important: So: repeat(3, [col-start] 1fr [col-end]) is a named set of grid lines. So when we have line names inside repeat(),
+ then it's gonna create a named set of grid lines.
+So for example, in our example, in the .header , the first COLUMN grid line is called col-start 1, because the header, is starting from the
+first column grid-line which is col-start 1. So the first grid column line of our grid layout(why all of the grid layout? Because the
+vertical lines spans all over the grid system right?) is col-start 1 and the next grid column line is called col-end 1 and AT THE SAME TIME, it's
+also called col-start 2 and the next vertical one is col-end 2 and col-start 3 and the -1 as the grid column lines is called grid-end which is
+the name that we choose when we were defining our column names.
+So in .header , write:  grid-column: col-start 1 / grid-end;
+Now we could still use the -1 trick instead of grid-end , to indicate that the grid-item should go all over to the end, like we had before.
+Now let's change the gird number columns of .sidebar to grid-name columns.
+Important: When you have grid-column , you can use named column grid lines and when you have grid-row prop, you can use grid row line names.
+
+EX)
+repeat(3, [col-start] 1fr [col-end])
+
+So in professional layouts, we name all our tracks, both the row tracks and the column tracks and then USE these names to position our
+grid -items to build our layouts.
+In the next lecture we're gonna see the third method of how to position grid-items.*/
+/* 11. Naming Grid Areas:
+The third method of positioning grid-items on the grid, is by naming entire areas. First comment out the method 2 codes in codepen and copy it and
+paste it to start using method 3.
+Now how we do that?
+We use grid-template-areas prop. This is how we name grid areas:
+We write a couple of strings and in there, we basically give each grid cell, a name. So in our case, we have a 4 by 4 grid(4 x 4 grid).
+So in the first string, we give the first 4 grid cells, 4 names and what are our first 4 cells?
+Well, those are the 4 cells inside header and all of them, are for the header. So let's call each of them, head. So: "head head head head"!
+So the 4 cells will be called head and that's because we want the header, to be in all of those 4 cells. So basically that first string here, defines
+the first ROW of our grid. Now we hit enter, then come to the exact place under the last string you defined for defining the next string and then
+we need to call the next 4 cells (which are in a row, so the three small boxes and the most up cell of sidebar). So let's call the 3 boxes, box and
+then the last one(most up grid cell of sidebar), side.
+So it's good to use really small names, so as small as possible, so that it doesn't take too much space in the declaration of names of lines, so
+that it's also not too hard to write, because there's usually a lot of repetition(in this method). So: "box box box side".
+
+So basically, this template area approach, just creates a representation with text, of how our final layout is gonna look like.
+Now what do we have in the third ROW?
+We have 3 cells of main-content , so let's give each of them "main" name, so: "main main main" and then on the side, we have one of the cells of
+our sidebar. So "side", therefore for the third row we have: "main main main side" and then in the last row and therefore, it's the last string,
+we have 4 times, the footer. So let's simply use foot for the name of each of those cells in there. So : "foot foot foot foot"
+
+Important: In third method(naming grid areas), each row is a string.
+This is a great way of placing grid-items on the grid, because it's simple.
+Now once you have the declaration of cells finished(once the string declarations finished), then all we have to do is to actually PLACE the items.
+So let's just remove the grid-row and grid-column from the code we currently have in codepen and start fresh.
+Let's position the .header. Now use grid-area prop. In the past, we used this prop to put the column-start, column-end, the row-start and row-end(so those four
+numbers, remember?). BUT! There's actually another way of using this property here and that's called for the grid-template-areas(the strings) that we defined
+earlier.
+Now all we have to do, is write head for the grid-area prop of .header . So:
+.header { grid-area: head; } without any quotes. So it places this item(head) on the entire area that we defined to be head. So imagine if we put sth else for
+the first row and for the last "head", like "side", so if we had: grid-template-areas: "head head head side" and for .header, we had:
+.header: { grid-area: head } therefore, Now the header, only occupies those three cells which has named "head" and for grid-area of .header ,
+we used head name and the sidebar cell is at the fourth item.
+
+Now after setting the named grid-areas for .header{} , we see that those 3 small boxes are positioned properly, so they don't need any grid-area prop.
+So let's go to .sidebar{} and for that, just use grid-area prop and for it's value, all we have to do is to say the name of the area which is side and the
+.sidebar is exactly where it should be!
+
+So the third method has a completely different philosophy. So in this approach, FIRST we think about the layout(the defining of grid-template-area in the
+grid container, is the process of thinking of layout). So where all of those items should be placed and then all we have to do is to give the names to
+each of the classes that we have(so for example we gave the head name, to .header in order to give the .header , all of the grid-areas that have head name.)
+While with the two other methods that we did before, we used the names of the lines(method 2) or the numbers of those lines(method 1), which those 2 are quite
+similar, and then, for each of those items, we had to think, where to position them.
+
+Important: When we create that template-area (grid-template-area prop in the grid container) definition, we need to be careful and create a COMPLETE
+ REPRESENTATION of our grid system there.
+So if it's A BIT different at all, then ALL of it is not gonna work. So for example, if you just delete the last foot name from grid-template-area in our case,
+you'll see that it's not working AT ALL anymore and looks really weird and that's because, we didn't really fill up, all the 16 cells that we have in our case.
+So we have 4 columns, 4 rows, when 4 * 4 makes 16 and so there, we have to have 16 names. But we deleted one of them, so it's now 15 names and that causes serious problem.
+
+Another thing that we can do with template areas approach, is to actually leave empty cells and all we have to do for that, is to instead of deleting the name
+of that cell(which would cause problem), is to put a dot. For example, if we place dot instead of fourth head cell, the small box 1 would go to the place where
+that fourth head cell was placed before and other small boxes would shift one cell to the left but the sidebar cell in the second row(which is the row that
+other boxes are there too, wouldn't shift to left, because we explicitely set it's position). WHY that small box 1 would go there and not other cells?
+Because we didn't really(explicitely) those small boxes there. Right?
+So if you REALLY(because currently in our example, by putting dot in the place of fourth head cell, that head cell is gone, BUT other grid cell or item which is
+small box 1, is now in the previous place of fourth head which we deleted, so that place STILL isn't empty!) wanted to leave a cell empty, we would have to
+then place those three small boxes in the place they should be always, even if there's other room in our grid system, so they won't shift at all.
+For doing that, let's select those small boxes with comma selectors: So give those small boxes, some different classes:
+.small-box-1, small-box-2, small-box-3 {
+    grid-area: box;
+}
+
+But this isn't correct. Because now, the small-box-3 has all of the place where those 3 boxes should be exist and also the gutters are gone!
+So obviously this is false and that's because, the grid-template-area definition isn't correct. Because currently, the place where this
+small-box-3 is placed, in the grid-template-area , is called: box box box. So what we say in box box box, is that, that area should all
+the be same, which in fact, it is not!
+So let's change box box box to box-1 box-2 box-3 , so now in grid container we have:
+grid-template-areas: "head head head head"
+                     "box-1 box-2 box-3 side"
+                     "main main main side"
+                     "foot foot foot foot";
+
+and then put box-1 for grid-area prop of box-1 and then put box-2 for grid-area prop of box-2 and ... . So:
+.small-box-1 { grid-area: small-box-1; } and ... .
+
+Now with that, all of the three small boxes are in the place where they should be and they won't shift at all and therefore, the fourth cell of
+header is empty now.
+That was all the content for naming grid-areas and how to position grid-items on the grid with this approach.
+
+So these 3 methods, can be used in different situations. For example, the third method(naming grid areas by defining grid-template-areas in grid container),
+is great for smaller layouts(like 4 by 4 or 5 by 5 grid layouts), but if we have a huge layout like a complete page, maybe with 12 columns or 15 columns and
+10 or 15 lines, then it becomes very unpractical to write out all of those area names. It's simpler to simply name the grid LINES(approach 2) and not
+grid AREAS(approach 3) and do it like the second approach. */
+/* 12. Implicit Grids vs. Explicit Grids:
+Let's create a new project. In Emmet, if you write: .container>.item.item--$*8 , it would create a <div> with class of container and then 8
+direct child of that container, with classes of item and item-$(1, 2, ...).
+
+You can place .item inside .container, even without & selector, so it's no problem, because the .item is actually inside of the .container. So:
+Important: If an element is inside an other element, you can nest the selector of child element inside the selector of parent, but if an element isn't
+ inside another one in the markup, you can't place the nested one inside the parent even if you don't use & selector.
+EX)
+<div class="container">
+    <div class="item"></div>
+</div>
+<div class="outside"></div>
+
+.container {
+    .item {} // would be applied
+
+    .outside {} // wouldn't work
+}
+
+Now let's add some grid tracks and starting with the row tracks. So define grid-template-rows in the .container .
+Important: Also we want 2 columns with the exact same width, occupying the ENTIRE width of the container. So use: repeat(2, 1fr);
+and just to see, what's going on there, let's add some gap with grid-gap prop.
+
+But currently, we have 8 items in markup but in css, we defined 2 rows and 2 columns! So actually, we defined a 2 by 2 grid which are
+perfectly shown, but then, down them, we have the other four cells. Why? Because we actually have 8 items.
+Those four grid cells that we (explicitly) defined and they are at the top of the other 4 ones which are now occupied by those 4 grid items and
+this is the so called: explicit grid. Because we EXPLICITLY defined HOW those rows and those columns should look like.
+So again, that upper part(those 4 grid cells) of the grid-system is called explicit grid.
+Important: Now if we have more grid items than we have space, well, then css grid, automatically adds some more tracks to the grid system, so that
+ we can then fit all of those remaining grid-items and that's what happened in our example.
+You see down there, those 4 items are in two ROW tracks that were added automatically. So they were added to our grid system, in order to
+fit the remaining 4 grid-items and that part(those 4 items) of the grid-system, that part is called the implicit grid.
+
+So the part that we ACTUALLY defined in our code, is the explicit grid, so the part that was defined by grid-template-rows and grid-template-columns props
+and then the part that is automatically added, in order to fit the content that doesn't fit IN our explicit grid, is called implicit grid and
+css adds the implicit grid after that explicit grid.
+
+Actually, a track is the space between 2 lines.
+
+Now what if we wanted to somehow style that implicit part of the grid?
+There's a property for that. So let's say that we want the row tracks in implicit grid to have a defined height and we can do that by using
+grid-auto-rows: 80px; prop. So now those automatically added tracks, they have a height of 80px. So the last 4 items have height of 80px.
+
+Also in the grid inspector in firefox, the implicit and explicit grids look a bit different. So you see that solid line goes AROUND the EXPLICIT grid
+but doesn't go around the implicit grid too. So the solid line ends where the explicit grid ends and around the implicit grid, there's no
+solid line.
+Also the grid lines in the explicit grid are dashed while in the implicit grid, they're dotted.
+
+Now you may ask why are those additional grid-items that we can't fit into our explicit grid, added as rows and not as columns?
+It's because of a simple small property that is called grid-auto-flow and this prop by default is set to row, but we can also set it to column,
+on the grid container. So now if you set: grid-auto-flow: column; on the .container , the remaining items(the items in implicit grid) are now
+no longer added as rows, but as columns. Because we told our grid(grid-container) to flow as columns.
+So you also see that there's a difference in the way that those items(the grid-items in implicit grid) are placed and what this means, is that the
+automatic placement algorithm now places these items in order to fill up the columns and no longer the rows.
+
+Important: So when grid-auto-flow is set to row(the default), if we have some implicit grid-items, css will automatically create additional rows and will
+ keep the NUMBER of columns the number that we explicitily defined in code. But if you set grid-auto-flow to column, the implicit grid-items will be
+ added into new columns, so the NUMBER of rows will be preserve as what we defined in the css code and instead, the number of columns will be increased.
+ Now with having grid-auto-flow: column; , if we added more and more grid-items, then new columns would be created and the number of rows will be preserve.
+ Now of course, if we can style the rows that are automatically added(which means the grid-auto-flow is set to row) we can do the same for the new created
+ columns, by using grid-auto-columns: <the width of automatically added columns>.
+ So grid-auto-columns only applies as soon as we set aut-flow to column and the grid-auto-rows(if is set!) for the automatically created rows,
+ is not really relevant for this case(the case where we set grid-auto-flow to column, so the grid-auto-rows won't affect anything but the
+ grid-auto-columns will affect.)
+
+So you saw, that it's actually not a problem at all, if we have more items than we explicitly defined in our code(for example if you use 3 values for
+grid-template-rows and 3 values for grid-template-columns, then we would have 9 items, but if we had more than 9 items, it would create implicit rows
+by default!), than we can fit them in the grid that we defined initially.
+So this implicit grid and the ability to style those additional rows and columns, is great for use cases, where you don't really KNOW how many rows
+or columns there will be in your grid-system or in your layout.
+
+So for example, if you have an ajax call where you can load data from a server(api), while the page is loading and you don't really know if there
+are 10 items or 12 or ..., so if you don't know how many there are, you can simply style those automatically added rows or columns and then everyting
+is gonna work as you expected. So you can control how the grid will look like even if you don't know how many items there will be in it(the grid system.)*/
+/* 13. Aligning Grid Items:
+Now we're gonna look at different ways of aligning grid items to grid areas. Let's first set grid-auto-flow back to it's default value. So by doing that,
+our grid-items are placed in rows rather than in columns(in other words the number of columns would have the number we defined in our code)
+and so that the additional items are then placed in the rows.
+
+Also let's add some spanning there to two of those grid items, so that we can better see how this alignment of grid items to grid areas work.
+For that let's select item--4 and item--7 and give them different background-color and for item--4, lets say we want it to start
+on the grid row number 2 and then span across three row tracks. So in other words:
+.item--2 {
+    grid-row: 2 / span 3;
+}
+
+and you will see that it also shifted from the second column to the first column track(gone left side) and the instructor is not really sure why it
+did that!!! but it has to do with the automatic placement algorithm.
+Also by using grid-column: 1 / -1; on the .item--7 , you'll see that the las t grid item goes to another newly created row track. So now we actually
+have 4 implicit row grid tracks and 2 explicit grid row tracks.
+
+Aligning the grid items to grid areas is very similar to align-items in flexbox and in fact, we have the EXACT same property in css grid too.
+So just like in flexbox, we apply these props to the grid container. So give .container , align-items prop which is gonna align the items across the
+column axis and if you put it to center, that's what we meant with aligning the grid ITEMs inside of  grid-AREAs.
+For example in our example, the elements with orange background(and the content that are IN that grid item) are the grid items and
+and that grid item is now aligned vertically in the center of the grid AREA.
+In devtools, we can see the row and column tracks.
+
+Now why the grid items were streching all the way from top of their grid-area to the bottom of their grid-area, before we set that align-items to
+center?
+Well, it's because of the same reason that it is in flexbox and that's because align-items by default is set to stretch. So if you set it to
+stretch, then the grid items stretch across their entire grid-area(because the grid-item maybe has spanned over multiple grid cells, so it's
+false to say just it will be stretch to grid-cell!). Also we can set it to end or start. For example with end, you can see that each of the grid-items
+is aligned to the end or bottom of each grid areas.
+
+We also have justify-items which we haven't in flexbox because flexbox isn't a two-dimensional layout system and in grid we set it on grid-container.
+
+In grid, we have align-items which aligns the items across the column axis which means vertically and then we have justify-items which aligns the
+grid-items across the row axis or horizontally. So by saying:
+.container {
+    align-items: center;
+    justify-items: center;
+}
+
+The items are completely centered both horizontally and vertically inside their grid area(and if an item doesn't span across multiple cells,
+it would be actually centered inside it's grid cell, because in that case, the grid cell and grid area would be the same).
+So with align-items, we align grid-items vertically and with justify-items, we align them horizontally inside their grid-area.
+In firefox devtools, it would show you the grid-CELLs and not grid-AREAs, you should find out the areas yourself based on your code.
+Important: If we would have an grid-item that spans across multiple grid-cells, it's grid-area is the space of cells + gutters between those cells.
+
+The default of justify-items is stretch.
+if you set justify-items to start(which means: start of the grid-AREA), the grid-items would go to the left side of their grid-area.
+
+Now, as in flexbox, where you have the align-self prop, in order to override the align-items prop that you set or may not set in the flex container,
+for one individual flex-item, we have the same in the grid. So we have align-self and also justify-self.
+So if for example, you set align-self prop for item--4 in our example, it will override the align-items prop which is on the grid container. So if
+you set it to start for item--4, then ONLY that item will move to the top and now with that, it will vertically aligned to the top of it's grid-area.
+So just like flexbox, the <>-self prop, overrides the overall setting which is set on the grid-container.
+Important: BUT IN FLEXBOX WE ONLY HAVE align-self, because again, it's just a one-dimensional layout system, but in grid we have align-self and also
+ justify-self for the horizontal direction alignment.
+And that was how we align grid-items to grid-areas, both horizontally and vertically. Now let's look how to align entire TRACKS to the grid CONTAINER,
+go to next lecture.*/
+/* 14. Aligning Tracks:
+Important: In the last lecture we looked how to align grid-ITEMS to grid AREAs and now let's look how to align entire grid-TRACKs to our grid-CONTAINER.
+Before that, we need to make a couple of changes in our example, first add a comment above align-items and then comment out grid-template-columns,
+because we no longer want columns to occupy the entire container, because then we can't see how this lecture is all about and copy it and paste it
+under comment for aligning grid-tracks to grid-container and instead of 1fr, write 150px for their width and also comment out align-items and
+justify-items which were for last lecture and add grid-template-rows for this lecture comment and add height of container to 1000px and with that,
+you can see the container continues even after where the grid-tracks are, and also continues in the right side. So we have a bigger container than
+the place where grid tracks live. So grid tracks only occupy a little part of the grid-container.
+So now we're ready to ALIGN the TRACKS to the CONTAINER.
+
+Important: justify-content which sets on the container, works both in grid and flexbox and in grid, it's gonna align the tracks inside of the container, across
+ the row axis, so horizontally.
+So add justify-content: center in grid container. With that, the grid-tracks went to the center of their container.
+So just as we center flex-items inside of a flex-container with justify-content, we do it the exact same way with the grid-tracks in css grid.
+So this is what we will use, if we wanna really center the entire content of the grid, inside of the container. We also have: start, end, space-between,
+which would push each of the columns to one of the sides of the grid container. So basically it divided all of the empty space, between columns(tracks) and
+that's the exact same behavior as in flexbox with space-between. We also have space-around which with that, the space on the left side is the same as on
+the right side which makes that the space between items is double the space on outer sides(the space in most left and the space in most right side).
+justify-content: space-evenly; the space is now ALL the same. So the space between the items is the exact same space as on the left and the right side
+of each of the items.
+
+Now if we can horizontally align the grid-tracks, we can do the same, vertically and there, we use align-content. With the value of center,
+all the tracks moved into the middle of the container, vertically and for align-content, you have all the exact same options as you have in justify-content.
+
+Important: Whenever we have <>-items in the name of prop(align-items and justify-items), that's for the individual items and if we have <>-content in property
+ name, it's gonna align the entire tracks. Then, the align part of the property name always means the VERTICAL direction or the column axis.
+ So align-content and also align-items means the vertical direction or column axis and justify always means that it's the horizontal direction or row axis.
+So that was how we can place our items and our tracks exactly where we want them to be inside of the grid container.
+
+Now let's select .item--6 and make it span across 2 row tracks, so: grid-row: 2 / span 2;
+After doing that, you see that below item--3, there's an empty cell and it comes from the fact that automatic placement algorithm kind of tries to
+keep the sequence of those grid-items in the source code and tries to kind of follow that order in source code, when it places the grid-items on our
+grid and therefore, sometimes that can create these kind of holes in grid and we not always want them, so let's fix it.
+Solution: Go to grid-auto-flow in grid container and add dense value to it. So now instead of grid-auto-flow: row or column set it to
+grid-auto-flow: row dense; and with that we say we want no holes in our grid and we want a more dense grid with no holes and all the items are packed,
+so that all the grid cells are filled with some kind of item.
+In our example by adding dense, you see that the automatically added track because of grid-auto-flow set to row, is now gone.
+Also in before adding dense, you saw another empty cell(a cell without any grid-item in there), next to item--8. But with dense it's gone.
+By using dense, the item--8 is went to empty cell which was next to item--5 and the automatic added row is now gone. So with dense we haven't any holes and
+all items are full packed and we have a full packed grid.*/
+/* 15. Using min-content, max-content and the minmax() function:
+I created 4th project in codepen.
+Explicit grid is what we define with grid-template-rows and grid-template-columns. So if we have 8 grid-items and we just make w rows for our
+grid-system by saying: grid-template-rows: repeat(2, 150px); , then we have an explicit grid and implicit grid and in this case, we would have an
+explicit grid with 2 rows and an implicit grid with 6 rows(why rows? Because grid-auto-flow is set to row by default). So those 6 items are added
+to implicit grid. So because CURRENTLY we ONLY defined 2 cells(yes cells, because by just saying: grid-template-rows: repeat(2, ...); we just
+define 2 explicit CELLS(the default of grid-auto-flow is row)), so the remaining ones are added to the implicit grid which we didn't define.
+So let's now define the columns.
+So far, we have only used real units for defining columns and rows, like px, percentages or the fractional unit. So now let's say:
+grid-template-columns: 1fr 1fr 1fr 1fr; or repeat(...), but let's keep not using repeat() because of the goal of this lecture.
+So up until this point, we always used these normal units there, but there are some new keywords that are associated with css grid that we can use there
+instead and the first one is max-content. if you use max-content of a grid-track, you see that track has the exact width, so that it can ACCOMMODATE
+it's content. So the largest content in that track which we used max-content on it, defines the width(in case of grid-template-columns) of that track.
+So the largest content of a column-track, defines(becomes) the width of that column.
+Learn: So max-content in a column, makes that column as wide as it has to be to fit it's content and in fact max-content also tries not to make
+ any line-breaks.
+Now if you have a lot of content in at least one of the cells of column which the width of that column is max-content, that content would EXPAND
+that column and therefore, that column becomes really wide without having any line-breaks. Because as we mentioned, it tries to make the
+column that it's in it, as wide as possible without having to cause line break in the content and then of course the remaining space is divided for
+those 2 columns in the middle because those 2 middle columns currently(grid-template-columns: max-content 1fr 1fr max-content) have 1fr. So those
+columns because each one have 1fr 1fr, the remaining space of grid system goes to them and will be divide for each of them.
+
+If you use min-content on the column that has a lot of content(which means a lot of width for it's content), that column track, takes the largest
+width(if used on columns) that is needed to FIT it's content inside of itself without overflowing from width of the column, but if there's no height
+or width anymore, well, it's content would be overflow from HEIGHT(if you doesn't set min-content for that cell on it's row).
+So if the content is overflowing in heights(vertical positions) of a cell, you can use min-content on the grid-row-tracks for that cell, so the
+content won't overflow from heights of the cell.
+So if you didn't use min-content on item--8 , then it's width would be the width of it's largest content because of min-content on the column which
+that cell was on it, but because we didn't set any min-content on the ROW which that cell is on it, the content would overflow from height of that cell.
+
+So min-content when is set on column of the cell which that cell was on that column, the width of that cell would be the minimum width which that cell or
+column has to have, in order to FIT it's content without overflowing on the SIDES(because of min-content is set on the grid-template-COLUMNS-so it has
+to do with width which is on the sides). But currently because we defined the rows with a height of 150px, the content of item--8 doesn't really fit anymore
+into the HEIGHT(because the row has very little height which we set in grid-template-rows of grid-container).
+So what we can do is to use min-content (or max-content not in this case!) ALSO, on the ROWS. So instead of using grid-template-rows: repeat(2, 150px);
+which has the fixed value of 150px, use: repeat(2, min-content).
+Now the content first in the height(because of min-content in grid-template-rows) and in the width(because of min-content in grid-template-columns) of
+the grid-cell which that content is in it.
+
+With minmax() function, we pass 2 values in it and then css ensures the track will always stay between these 2 values. So if we pass 100px and 200px to
+minmax() for a column, then css grid will ensure that no matter what happens, that grid column will always stay between 100px and 200px WIDTH(because width
+is associated with columns in grid).
+Important: In grid: Width is associated with columns and height is associated with rows.
+EX) If we had: grid-template-rows: repeat(2, minmax(150px, min-content)); , it means, the rows should be at least 150px HEIGHT and at most, min-content.
+So if in one row, you have not much content that wouldn't make more than 150px, then the height of that row would be 150px and if in one cell of a row
+you have a lot of content, then the height of that row would be the MAXIMUM height of all of the cells of that row(so the height of the row in that case
+would be grow. So it would be grew, in order to accommodate to fit all of it's content.)
+
+EX) Let's say we want the first column to always be between 200 and 300px and the other ones should fill up the REMAINING space:
+grid-template-columns: minmax(200px, 300px) repeat(3, 1fr);
+
+With that, even the viewport width gets very small, the width of first column would never be less than 200px. So if the viewport gets very small
+in terms of it's width, it will get a horizontal scrollbar, but the first column would always be at minimum of 200px and in this case, instead,
+the other columns would get smaller and smaller and the first column would have 300px, until the other columns can't fit their content in themselves(if other
+stuff aren't set) and in that case, the first column would start to getting less and less UNTIL 200px.
+
+EX) grid-template-columns: minmax(200px, 50%) repeat(3, 1fr);
+Now if the width of viewport is enough, then the first column would get 50% of width of it's parent which would be a grid-container. Now if we
+start to decreasing the width of viewport, first off, the width of other columns that have 1fr would getting less and less and then if EVEN ONE OF
+CELLS can't fit it's content in horizontal direction in itself(if other stuff aren't set!), then the first column would begun to decreases, BUT IT STILL
+ALWAYS HAS 50% of it's parent's width. BUT AT SOME POINT, there will come a moment or a point, where first column is no longer 50%, but it's 200px.
+Because we said that it should never be less than 200px.
+
+EX) grid-template-columns: minmax(200px, 1fr) repeat(3, 1fr);
+When there's enough viewport width, the width of ALL columns are the same, but as soon as we start decreasing the viewport's width, the width of
+ALL columns also start to decreasing because all of them at that point have 1fr width, but at some point, you see that the first column is fixed at
+200px width, while all the other ones, divide the remaining space between each other. So the first one stays at 200px(if there's no more space!) no
+matter what happens and the others take up the remaining space equally UNTIL there isn't enough space for one or more of those other ones and then,
+the ones with wider content will get the width they NEED while other ones still can decrease their width until they ALSO hit their content width and after
+that(when there's no column to decrease it's width), we would get scrollbar(if no other stuff are set!). So when a cell hit their content width and can't
+no more decreases it's value, it would be wider than the other cells that can STILL decrease their width, when the viewport decreases. But we set
+1fr for all of them in this case, right? Why some of them would be bigger?(So this effect would happen, if we EVEN set all of them to 1fr, because
+we EXPECT to all of them get same width at any moment right? NOO!)
+But why is that? Why the columns that have 1fr decrease their width as the viewport width decreases, UNTIL they hit their content width and no more can
+decrease their width from that point?
+Because the css grid specification says: A fractional unit fills up the entire REMAINING space but it is NEVER smaller than the minimum content of a row
+or a column. So ideally, all of those columns that have 1fr should be all the same, because they're all 1fr, but at the limit, when one of those columns can't
+get smaller because of it's content, then that fr unit OF THAT CELL! simply takes the minimum width that it NEEDS to fill the column without overflowing(in case
+of columns, overflowing to new linens of content in that cell).*/
+/* 16. Responsive Layouts with auto-fit and auto-fill:
+We're gonna look at aut-fit and auto-fill keywords and how build responsive layouts with them, without writing a single media query.
+EX)
+we have 8 grid items in html and this rule:
+grid-aut-columns: repeat(4, 1fr);
+
+But what if we didn't want to specify that EXACT number for number of columns there?
+What if we wanted to adapt that first arg to number of items that we have? For example, let's say we put 100px instead of 1fr in the example, that
+would create 4 columns those columns each would have a EXPLICIT width. But imagine if you want it to have eight columns there, but instead of
+writing 8 explicitely, we wanted that to happen AUTOMATICALLY and that is where auto-fill comes in. So instead of number there, we can write: auto-fill and
+then css grid is gonna automatically create 8 tracks for us and ACTUALLY IN FACT, it's not just 8 tracks(it's won't just create tracks as equal as
+the grid-items that we have), it creates 10 tracks! and why 10 and not equal to number of grid-items which in this case is 8?
+That's because our container is 1000px and we speicifed that we wanted 100px columns and so 1000 divided by 100 is 10 and therefore, it then creates
+10 column tracks and then after that, it puts our items in there.
+
+Learn: auto-fill automatically creates as many tracks with the desired width that we specify as the second arg of repeat() for example, as fit into the
+ (grid-)container and in this case, that's 10 tracks.
+
+Now what's different between auto-fill and auto-fit?
+Now if we use auto-fit in our above example, it actually STILL created the 10 columns and how we can see it? By seeing the column-lines number in devtools.
+So if you see that, you'll see the number of LAST line number which is 11(the column line) and this means the grid actually has 10 columns.
+Learn: So you can see it's 10 columns because it ends at number(LINE NUMBER) 11. But what auto-fit does is that it collapses those tracks and gives it
+ a width of 0 which then would create that extra space that you can see(because it created 10 tracks but as you can see in line numbers, but for those
+ 2 tracks, it gives them a 0 width).
+ So basically it is, as it only created really 8 tracks and actually in devtools of firefox and in it's layout section, you can see that we have
+ only 8 column tracks but the last column-line-number is 11! So it creates those tracks and then leaves that empty space there which we can then fill,
+ if we want it.
+Important: So with auto-fill, it creates 10 columns, so as many as fill in there, while with auto-fit, it STILL creates those 10 columns, but then
+ collapses the ones that are empty to have a width of 0.
+ (The empty ones, means if we have 8 grid-items and the specified width for each of those items is 100, that means
+ we would have 200px empty space which would be an empty space, because the auto-fit makes 10 column tracks but then make the width of those 2 column tracks
+ which with those 2 we would have full width of container, to 0.)
+
+auto-fit actually collapses those tracks and gives it a width of 0.
+
+What this allows us to do is to use minmax() function as the second arg which would make a beautiful solution.
+EX) 8 columns in html
+grid-aut-columns: repeat(auto-fit, minmax(100px, 1fr));
+
+With that, it occupied our entire grid-container EVEN with having 0 width for those last 2 columns in this example! So basically filling that
+extra empty space that was left over, by expanding those columns into MORE than 100px of width(because they're now 1fr).
+Now let's see what happens as we decrease the width of viewport. As you start reducing, for example if we reduced to 831px, I mean the container has
+831px width, we can STILL fit the 8 columns in there, right? Because each column has to be AT LEAST 100px. So 100px has to be the minimum of each
+column and right now we have 831px, so we can still fit 8 columns in there. But if you decrease further, the last grid item moved into the next line
+and that's because right now we only have 7 columns there because we only have 796px width for grid-container, so we can no longer fit 8 items with
+100px each in one row, because for that we would need at least 800px and so what auto-fit here(when there isn't enough space for all items
+to fit in one row (or column)) does, is that it creates instead of 8 columns, 7 columns and this would keep happening as we decrease that further.
+
+EX) 8 columns in html
+grid-template-rows: repeat(2, minmax(150px, min-content));
+grid-aut-columns: repeat(auto-fit, minmax(200px, 1fr)); and current width of container is 1007px:
+we would have 5 columns on the first row and each of them has 201px width and as we decrease it, we no longer have enough space for 5 columns and
+so we end up with having 4 columns in each row which each would have still above 200px limit. Now by decreasing it further, we would have 3 columns in a row,
+because it no longer has the space. Again, container has 797px, it no longer fits 4 columns with each having 200px wide, because for that,
+we need 800px, which we don't have anymore(we now have 797px) and so we have 3 columns in one row which means 3 columns.
+Now you can see tht we have the third row which hasn't much height because it isn't styled(it's an implicit row) because in our example we defined 2
+EXPLICITELY rows, so that third line is an implicit one, so let's
+style it:
+grid-auto-rows: 150px;
+
+So our layout is responsive without writing a single media query. So the trick with auto-fix and minmax(<fixed number>, 1fr) which has
+a fixed number and 1fr is a good trick which will then automatically adapt to the screen size, without having to write media queries.  */
+/* SECTION 9. Nexter Project — Master CSS Grid Layouts!:
+1. Project Overview and Setup:
+Entire layout of the page is grid and also we use grid in smaller components.
+In this project, we have 1 file for each part of the website, but we'll talk about why we did it this way.
+In start npm script, at the same time we watch for sass changes and we have our devserver. The last 4 npm scripts are for build process.
+With npm install, it looks at our package.json file and installs all of our dependencies that we have listed in that file.
+
+You can use npm run start to start development. Also we can specify the browser in live-server command. Because if we just run live-server
+without anything, then it will basically launch our default browser for the devserver and so it will launch chrome but because of css grid
+devtools we have been using firefox, so write: --browser=firefox
+
+For the npm script named "start", we don't EVEN need to type: run. We just need to write: npm start. So without writing npm run start and
+just by typing: npm start , we can run a npm script named: "start".
+
+2. Building the Overall Layout - Part 1:
+- How to build a complex and modern layout using advanced css grid techniques
+- How to choose different row and column track sizes for different types of content
+
+Sidebar on the left side of page, goes all the way from top of the page until down. So that's the first part of the layout.
+Then we have that dark blue part left side which it's left side is header and on right side, we have another part of the layout.
+Down there, we have features of the company, so basically describing how the company works and so that is another part of the layout.
+Down there, we have testimonial section with one part on the left side and then another part on the right side.
+So it's a testimonial of some people who found their perfect home.
+So we call that a story. The left side is one part of the layout which is like a gallery, like the pictures and the right ise is the content of
+the story which is on the right side and we can treat them as two parts of the layout. Down there, we have the next section of the page,
+then down there, we have a typical application of grid which is that gallery and then, the footer.
+
+So we have a total of 8 parts in our layout. sidebar, footer, gallery, homes, story(which itself has 2 parts), features, left side of the header,
+right side of the header.
+
+We already(from the beginning) put the container class on the body tag, why named it container? Because it's gonna be our grid-container and
+all of those parts of the layout that we just saw and said, are grid-items which we're gonna place on the grid.
+So let's start by writing the markup for sidebar.
+
+After writing the markup, let's give each of them a background-color, so we can better see what's going on. In this project, we already have
+a file for each of them in the sass folder.
+
+3. Building the Overall Layout - Part 2:
+*/
+/* My notes:
+The first and last(outer) column and row tracks(lines) never would have gap and therefore they're always thin lines. But if you set some gap
+for inner tracks(all of the tracks except the first and last are inner tracks or lines), they become thicker and are no more like lines but in the
+explicit grid, they have height of 150px. */

@@ -1,0 +1,96 @@
+// COLOR VARIABLES
+$color-primary: #c69963;
+$color-primary-dark: #B28451;
+
+$color-secondary: #101d2c;
+
+$color-grey-light-1: #f9f7f6;
+$color-grey-light-2: #aaa;
+
+$color-grey-dark-1: #54483A;
+$color-grey-dark-2: #6D5D4B;
+
+// FONT VARIABLES
+$font-primary: 'Nunito', sans-serif;
+$font-display: 'Josefin Sans', sans-serif;
+
+/* Global reset: */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit; /* We're gonna inherit that from the html element. */
+}
+
+/* In html element css rules, we set our overall font-size. In this case, with that, 1rem equals exactly 10px.
+16px is the browser default.*/
+html {
+  box-sizing: border-box;
+  font-size: 62.5%; // 10px / 16px = 62.5% => 1rem = 10px
+}
+
+/* Global font-settings on the body element:
+We choose gold color for our brand as our primary color, because it's luxury homes then the secondary-color is a very dark blue which
+plays very well with that gold color and then we have the lighter greys and also the darker grey colors as always but in darker greys,
+we have a color which is also like brown a little, because that compliments the primary color in a bit better than if you would just have used
+a pure black-based gray for $color-grey-dark-2 . So you see that the $color-grey-dark-2 is close to the gray sides but ALSO in a bit in the
+golden part of the color spectrum.
+
+We are ABLE to use 300 as font-weight because that's what we included from the google font. Because for Nunito which is the $font-primary, we
+included 300 and 300i(italic) from google fonts.
+We use josephine sans for titles and the nunito font for overall font-family because it's a bit more neutral.*/
+body {
+  font-family: $font-primary;
+  color: $color-grey-dark-2;
+  font-weight: 300; // thinner font gives a luxury feel to the entire page(because it's the overall font so the entire page will have this.)
+  line-height: 1.6;
+}
+
+/* Let's see how many rows we want? The first row is the header and the realtors which is next to each other inside one row and the height of
+this row is actually a percentage of the viewport height. So if you decrease the height of viewport, then you will see that the height of the
+container(first row???) adapts as well. So the size of that first row is in viewport height units. So the first row track should have height of
+80vh. So right now, we have an explicit grid with only one row and all the other items will be added in the implicit grid, so the items
+that don't have any space in this one by one grid(grid-template-rows and the actual rows, have a one by one relationship right?). So right now
+we only defined one row*.
+Now let's go define the second row which is the features section. Now how do we want that row to be sized?
+Well we simply want it to contain the content! and if we increase this content, we of course want that row to grow with that content.
+That means, if we decrease the width of the viewport, the content will be go to the next lines, right, so the HEIGHT of the content would
+grow. So we also want the row to grow it's height with it's content.
+So when we decrease the viewport width, the content would grow so we want the row to grow with it. So how we do that?
+We want that row to have min-content for it's height(yes height, because we're specifying the grid-template-rows which is for HEIGHT of rows)
+In this case, we could also use auto for that row(instead of min-content) and auto is actually the DEFAULT. So if you don't specify anything,
+it would be auto,Important: so auto also means that it adapts to the content(just like min-content) and in this case(our second row),
+it really is the same. So we can write min-content or auto for the second row. Because either way, it's gonna mean that there will be
+enough space to FIT all the content. Currently, if you say min-content or auto, that's not gonna change anything, because right now,
+the content of the second row is just a little text. So the row won't grow to fit equal to it's content, actually it does, because that little text
+also gets some space right? So the row will grow to fit it's content.
+Important: The row is associated with height and columns are associated with width.
+
+Let's go to third row and this row is actually not a function of the viewport height, but the viewport width. So if we decrease the viewport
+width, the size of that row is adapting to the viewport and that means we're using the viewport width unit. (40vw means 40% of viewport width)
+and so as you're seeing how crucial it is to think about responsiveness, right from the beginning of defining our grid tracks and columns(row
+tracks and column tracks). So we don't use px, but we're using the units that make sense for the content that we're putting in that track and
+units like vh or vw are crucial units to use in a real word scenario.
+In exercies we usually did use some fixed size for columns and rows, but in real world, we don't always do that, so we use units like vh and
+vw and we also want the rows to adapt to the content by using min-content(especially in the rows we use this min-content keyword and not so much
+in the columns). So in the rows, it's sometimes useful to LET them(why let them? Because with that, they will ADAPT themselves to height of they're
+content) have the height of the content.
+
+Next row, we also want it to have the height of it's content, so use min-content and in gallery(the row that have the gallery section),
+we also want it to have the height of all of those images(which are it's content) together and the same thing for footer.
+So we're not gonna define any static value for the height of rows.
+
+Yes we used a width related unit(vw) for height of one of the rows, but even with that, it means that row will have a HEIGHT(and not width) of 40%
+of the viewport's width and if the width of viewport decreases, the height of that row also decreases.
+
+Instead of repeating multiple min-content here, we used repeat().
+
+You can also imagine that we put fixed pixel values in grid-template-rows and imagine what would happen if we then started to resize our window.
+So if the users viewed the page from a phone or from a tablet. By doing that, we of course should used media queries to adapt in that situation.
+But it's better to think responsive right from the beginning and size the rows and columns in a responsive and flexible way right from the start.
+
+Now we need to define our column tracks and that's more complex than defining our row tracks. Let's leave it to next lecuture as well with the
+PLACEMENT of all our grid-item in the correct position.*/
+.container {
+  display: grid;
+  grid-template-rows: 80vh min-content 40vw repeat(3, min-content);
+}

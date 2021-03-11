@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,400,400i|Nunito:300,300i" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png">
+
+    <title>nexter &mdash; your home, your freedom</title>
+</head>
+<body class="container">
+    <div class="sidebar">
+        Sidebar
+    </div>
+
+<header class="header">
+    header
+</header>
+
+<div class="realtors">
+top 3
+</div>
+
+<section class="features">
+    features
+</section>
+
+<!-- The story section is consist of two things. In order for those to be grid-items, each of the sides has to be a different element right?
+and so we say that those two are part of a story, but that left side here is the pictures and that right side is the content. So each
+of these will be a different grid-item. So we used story__pictures(so an element(and not a block) on the root of the html!!!), so we haven't first a
+block which has a class named story and THEN, inside it, we have that .story__pictures. NO! In this case we don't do this
+and it's perfectly legal to do it like this. So it's no problem having the block and the element(block__element) without having a parent block.
+So we know that these two are part of the .story block, but there's not really an element for that, because we want both of these elements to BE
+A GRID-ITEM, which being a grid-item in this case means to be a DIRECT child of <body class="container">, so we couldn't set another parent like
+<section class="story"> for these two elements(which we usually had), that would block the effect of grid on these two.-->
+<div class="story__pictures">pics</div>
+<div class="story__content">content</div>
+<section class="homes">
+HOMES
+</section>
+<section class="gallery">
+    gallery
+</section>
+
+<footer class="footer">footer</footer>
+</body>
+</html>

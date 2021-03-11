@@ -1,3 +1,15 @@
+@import "base";
+@import "typography";
+
+@import "sidebar";
+@import "header";
+@import "realtors";
+@import "features";
+@import "story";
+@import "homes";
+@import "gallery";
+@import "footer";
+
 /* 1. section intro
 CSS grid layout module or in short, css grids.
 
@@ -802,9 +814,48 @@ grid-auto-rows: 150px;
 So our layout is responsive without writing a single media query. So the trick with auto-fix and minmax(<fixed number>, 1fr) which has
 a fixed number and 1fr is a good trick which will then automatically adapt to the screen size, without having to write media queries.  */
 
+/* SECTION 9. Nexter Project — Master CSS Grid Layouts!:
+1. Project Overview and Setup:
+Entire layout of the page is grid and also we use grid in smaller components.
+In this project, we have 1 file for each part of the website, but we'll talk about why we did it this way.
+In start npm script, at the same time we watch for sass changes and we have our devserver. The last 4 npm scripts are for build process.
+With npm install, it looks at our package.json file and installs all of our dependencies that we have listed in that file.
+
+You can use npm run start to start development. Also we can specify the browser in live-server command. Because if we just run live-server
+without anything, then it will basically launch our default browser for the devserver and so it will launch chrome but because of css grid
+devtools we have been using firefox, so write: --browser=firefox
+
+For the npm script named "start", we don't EVEN need to type: run. We just need to write: npm start. So without writing npm run start and
+just by typing: npm start , we can run a npm script named: "start".
+
+2. Building the Overall Layout - Part 1:
+- How to build a complex and modern layout using advanced css grid techniques
+- How to choose different row and column track sizes for different types of content
+
+Sidebar on the left side of page, goes all the way from top of the page until down. So that's the first part of the layout.
+Then we have that dark blue part left side which it's left side is header and on right side, we have another part of the layout.
+Down there, we have features of the company, so basically describing how the company works and so that is another part of the layout.
+Down there, we have testimonial section with one part on the left side and then another part on the right side.
+So it's a testimonial of some people who found their perfect home.
+So we call that a story. The left side is one part of the layout which is like a gallery, like the pictures and the right ise is the content of
+the story which is on the right side and we can treat them as two parts of the layout. Down there, we have the next section of the page,
+then down there, we have a typical application of grid which is that gallery and then, the footer.
+
+So we have a total of 8 parts in our layout. sidebar, footer, gallery, homes, story(which itself has 2 parts), features, left side of the header,
+right side of the header.
+
+We already(from the beginning) put the container class on the body tag, why named it container? Because it's gonna be our grid-container and
+all of those parts of the layout that we just saw and said, are grid-items which we're gonna place on the grid.
+So let's start by writing the markup for sidebar.
+
+After writing the markup, let's give each of them a background-color, so we can better see what's going on. In this project, we already have
+a file for each of them in the sass folder.
+
+3. Building the Overall Layout - Part 2:
+*/
+
+
 /* My notes:
 The first and last(outer) column and row tracks(lines) never would have gap and therefore they're always thin lines. But if you set some gap
 for inner tracks(all of the tracks except the first and last are inner tracks or lines), they become thicker and are no more like lines but in the
 explicit grid, they have height of 150px. */
-
-
