@@ -852,7 +852,145 @@ After writing the markup, let's give each of them a background-color, so we can 
 a file for each of them in the sass folder.
 
 3. Building the Overall Layout - Part 2:
-*/
+Let's define the column tracks of our layout and then place the grid items in it, so that we end up with our final design.
+It's very common in web design to use a design grid, with like 8 or 12 or 16 predefined columns and that's also what we're gonna do in
+this project. Now it may not really be necessary for this design, but as I mentioned, grid systems like this one are widely used in web design.
+So for example, bootstrap has a 12 column grid. We start with an 8 column grid here. So imagine that we wanted just a very simple 8 column
+layout. So in .container class, say: grid-template-columns: repeat(8, 1fr); and this would produce 8 equally sized columns occupying the
+entire viewport.
+Currently, because we have 9 grid-items, 8 of them(because we have defined 8 columns), will fill the first row of our grid-system which that
+first row is 80vh(80% of viewport height) and the last grid-item HAS TO go to the next row(because we only have 8 columns defined).
+BUT that's not quite what we want, because what we want is actually to have like those fixed columns in middle of viewport like what we want in
+features section. What that means is that those columns in the middle, they have actually a fixed width. So we want those 8 columns to have a
+fixed width(but also when we decrease the width of viewport, they must adapt themselves to their content right?) and also remember that
+usually we use sth like 1140px or 1200px, so sth between 1100 and 1200.
+So let's divide 1140 by 8 which results in 142.5 and that's approximately 142px. So let's simply say it's 140px and therefore 14rem. So right:
+grid-template-columns: repeat(8, 14rem);
+
+But now suppose that we decrease the width of our viewport and the columns doesn't even adapt at all and that makes sense, because they're
+just fixed-width columns and therefore, we can fix that by using minmax(min-content, <fixed width>) instead of <fixed width>.
+So we say that the maximum should be 14rem, but it can be lower(this is the meaning of minmax() right?). But never below the min-content, which
+results in: minmax(min-content, 14rem)
+So the minimum size that it should have, in order to fit the content in there, is min-content.
+Let's think about it again. We want to have 8 columns and we want the width of each of these columns to be between their minimum content(which
+means: min-content) and 14rem. With that, if you now decrease the width of viewport, you see that the columns are starting to adapt
+to the viewport width. But also it(each column) never grows larger than 140px(14rem).
+
+Also we want sth else and that's the sidebar. So we want 8 columns in the middle, but then on the left side of all of these columns, we have
+the sidebar and so that's also a column track. So let's add that column track to our columns defnition and we want that column-track to be
+90px wide so 8 rem(also it's on the left side of our 8 column tracks which are in the middle, so we put that sidebar column, on the left side
+of repeat() function).
+So instead of: grid-template-columns: repeat(...); , type: grid-template-columns: 8rem repeat(...);
+So with that, we added ANOTHER column to our existing columns. So right now we have 8rem for the sidebar and then our 14rem for each of columns
+beside that sidebar.
+
+Now the last step is to center those 8 columns which each are 14rem width, between end of the viewport(which is right side of viewport) and
+that sidebar column-track. Because we don't want those 8 columns to be centered IN THE VIEWPORT, BUT BETWEEN the sidebar and the end of the page(
+right side of viewport). So between the sidebar which is currently on the left side of viewport and right side of the viewport and not centered
+in the viewport itself.
+How can we do that?
+Well, we could simply add two more columns. One to each side of these 8 columns in the middle. So one on the left side of these 8 columns and then
+one on the right side and we want both of those new columns to occupy the REMAINING of the SPACE. So instead of: 8rem repeat(...) for columns,
+type: 8rem 1fr repeat(...) 1fr;
+Why like that? Because the translated of this sentence: Add one new column to left side of our 8 columns and right side of it, means
+add 1fr column to left side of repeat(...) and it's right side!
+
+So now we have our 8 columns in the middle and then on the right side and on the left side, we have one column that occupied the remaining space.
+Also on the left most, we have the sidebar. So now if we decrease the viewport width, you see that those new left and right columns are the
+ones that start to shrink(getting smaller in width) FIRST. So they started to shrink because they are the one that occupy the FRACTIONAL SPACE or the
+remaining space and that's kind of what we wanted. Having our eight columns centered right in the viewport.
+Now if we hadn't that sidebar column there, then you could've used the margin: 0 auto, trick for centering. So where the margin on the left and
+right side are set to auto and then that would center the element or in this case, all of these 8 columns in their parent(viewport??),
+or we could also used the justify-content prop, but that wouldn't have been perfect in this case as well and actually another reason why we
+want to do it like this, is because we would have some sections(like story section) that go from one side to the other and that's what is called
+the full-bleed sections. BUT in features section, our content in that section is occupying ONLY our eight columns which are in the middle
+and are not from one side of viewport till the end of it, in contrast of full-bleed layout, but for example in story section which is a
+full bleed section, it goes all the way from the end of sidebar column, to the end of viewport on the right side and the same thing for gallery
+section and footer and also the header with realtors section. But for example in homes section, the content of that section are
+only in the 8 columns and not out of them.
+
+So those are full bleed section and therefore we NEED those columns on the left side of our 8 centered columns and right side of them, in order to
+basically BREAK OUT of our predefined 8 columns grid that we have in the middle of the page(they are in the middle of page, if you also
+consider those new left and right columns and the sidebar!) and so that's another thing which this layout allows us to do perfectly.
+So this is perfect for having full-bleed sections in the middle of some 8 column sections. So having a couple of design elements which are
+centered in the viewport like we have with these 8 columns, but then sometimes we have some full-bleed sections in the middle of that.
+
+Again, we started with an 8 column layout which are those 8 columns we have, then on the left side we added that sidebar and then we added
+a column on left and right side of our 8 columns group, which both of those 2, occupy the remaining or fractional space, in order to CENTER
+that 8 column group in the middle of the PAGE and then if you want a full-bleed section, we can occupy these columns and have a section
+that goes all the way from the sidebar(in this case)(end of sidebar-right of sidebar) to the edge of viewport in right side. If that sidebar
+didn't exist, in full-bleed layout, have a section that goes all the way from LEFT side, all the way to right side, for example and with that,
+we can kind of break the inner 8 column layout.
+
+Now in order to make our life easier when we start placing the items, let's name these column tracks. For example when you want name the
+8rem column, you say: [<name>] column1.
+Also remember that the grid-line can have multiple names.
+Son now instead of: grid-template-columns: 8rem 1fr repeat(8, minmax(min-content, 14rem)) 1fr; we say:
+grid-template-columns: [sidebar-start] 8rem [sidebar-end] 1fr repeat(8, minmax(min-content, 14rem)) 1fr;
+
+Why we named full-start? Why the name "full"?
+Because that is where we want to start the full-bleed sections. So imagine that we have a full-bleed section, then that would start right AFTER
+THE SIDEBAR(in our project, if it wasn't a sidebar, well, the full-bleed section would start from the left of viewport till end of viewport) and
+it would go all the way until the END. THEREFORE, we need to name the LAST grid line(which is the line that our full-bleed layout ends), full-end.
+Because that's where our FULL(like the name that we choose for those two lines!)-bleed section ends.
+
+Now after naming the second line, full start and the last line, full-end, we call the grid line that comes after first 1fr column, center-start.
+Because that is the beginning(start) of our eight columns and that's the part that is gonna stay centered in the middle(so we call it: center)
+and then the grid line after those 8 columns is called: center-end and now finally, we also want to name all of those 8 columns which are
+generated with repeat() function and we can do that, by creating a set of named lines and we do it, INSIDE the repeat() function and
+remember that this code: repeat(8, [col-start] minmax(min-content, 14rem) [col-end])
+is gonna create 8 "col-start"s, starting from number 1 to number 8 (so: col-start-1, col-start-2 ..., col-start-8) and the same ting for
+col-end.
+
+Now let's start by placing the sidebar. So go to _sidebar.scss and we want the sidebar(it's column lines, not row lines) to start from
+the grid-line called "sidebar-start" to "sidebar-end" and then the second step is that IN TERMS OF ROWS, we want it to span all
+the way from the beginning of the grid to the end. So use grid-row prop with the names of lines for it. We want it to start right at the
+beginning of our design and goes all the way til the end and what is the keyword for the end? -1
+Important: The keyword of start is : 1 and for end is: -1.(if they haven't any names)
+
+Right now we only have 2 row tracks and therefore, right now the sidebar is not as tall as it is in the final design, but it will start
+increasing as we add more rows to the grid.
+
+Maybe you're wondering why we're not naming the rows?
+That's because, in an overall layout like this, the focus is always more on the columns and not so much on the rows. So sometimes you might not
+even want to size the rows, because sometimes all you really want to do is set all your rows to fit your content(min-content ...) and in that case, you
+only need to define the columns, because the columns are always more crucial.
+
+Now let's go to features. For that, we know that features section, go from end of first 1fr column, all the way to start of second 1fr column(or
+all the way till end of those 8 columns). Or in other words, from the beginning to the end of our central 8 columns.
+But why? Isn't that true that features part is from sidebar to the end of viewport in right?
+NOOOO! The content is crucial not the actual section! The CONTENT of that section is from start of 8 columns till the end of 8 columns.
+So from: center-start to center-end grid line. Which in between these 2 lines, we have our 8 centered columns.
+For now, let's leave the header and top-3-realtors for later, because they're complex.
+
+Let's continue with gallery and footer. We can see that the gallery goes all the way from one end to the other end(full-start / full-end).
+So we called it full-... , the full-bleed section and the same goes for footer.
+So now, the gallery spans all the way from sidebar to the end of viewport in right as well as the footer.
+
+If you want to set the font-size of the direct children of body, you can say: body > * {...}
+
+For homes section, we want it to be the same as the features section. So just like the features section, it is occupying the
+our central 8 columns.
+Of course we could used just the line numbers and simply make:
+.homes {
+  grid-column: center-start / center-end;
+}
+to:
+.homes {
+  grid-column: 3 / 11;
+}
+
+Now let's think about header and realtors sections.
+What we want to do, is to give 2 parts of our 8 columns in center, to the realtors and 6 columns of that 8 columns group, to the header.
+So 6 out of 8 columns are for the header and 2 out of 8 columns are for the realtors and then of course, we add the outer left part(the
+second 1fr column) to realtors and the first 1fr column to the header, so that we end up with a full-bleed look and so that's why
+those columns in the middle are so useful. Because they allow us to build different kind of designs.
+For example in story sections, you can see that we used that grid line in the center, to put one part of the story section on the left side
+and the other part on the right side of that central line.(so that middle line which is on the middle of 8 column group, is actually
+responsible for dividing those 2 parts of story section).
+So in that case, it's 4 columns for the picture section of story and 4 columns for the content part of the story section.
+
+Let's go to header file, */
 
 
 /* My notes:
