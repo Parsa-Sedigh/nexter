@@ -990,7 +990,43 @@ and the other part on the right side of that central line.(so that middle line w
 responsible for dividing those 2 parts of story section).
 So in that case, it's 4 columns for the picture section of story and 4 columns for the content part of the story section.
 
-Let's go to header file, */
+Let's go to header file, the HEADER(not realtors section!) starts at full-start(right after the sidebar(or in better words, where
+sidebar ends, there, we have the full-start line)) and it ends after the sixth column(the column right after the full-start is col-start 1).
+Remember: When we have a named SET(a list of them) of grid lines then we have to use the numbers after the specified name that we chose for each
+of the columns like the name we chose in repeat() and in this case, it ends after the sixth column which the name of that column is col-end 6.
+Important: So when you have sth like [col-start] in the repeat() function, it will get: col-start 1 , col-start 2 and ...
+
+and now the realtors.
+
+Now let's work on story__pictures and story__content . The story__pictures goes until the fourth column(col-start-5 or col-end-4) and then
+the next one(story__content), it starts at the beginning of fifth column. So go to story file.
+
+Now we finished our overall layout.
+
+Now if you decrease the viewport's width, then of course our eight columns in the middle, ALWAYS stay nicely at the center, right?
+and you can see this behavior at the homes section, which always stay at the center even if we decrease the viewport and that's exactly
+what we defined. But when you approach a small width of viewport or in better words, when you approach to the edges of 8 columns,
+you can see at that point, the space on the left and right side of the for example the homes section(which is completely bound to those 8
+columns), almost disappears and that's because those column tracks between the edges of 8 columns group, are defined to be 1fr, so 1 fractional
+unit(1fr of the remaining space) and so they do the exactly what we told them to do. BUT, we actually don't want them to be QUITE LIKE THAT!
+Because we usually want to have some margin or space between the content and the (margin or the actual page) of the page and in this case,
+that space between the actual content and the page, really gets low and they start to stick to each other and also the 8 column group also
+sticks to the sidebar and that's not ideal and what we can do is to use the minmax() function.
+So instead of those 1fr units in: grid-template-columns: [sidebar-start] 8rem [sidebar-end full-start] 1fr
+                         [center-start] repeat(8, [col-start] minmax(min-content, 14rem) [col-end]) [center-end] 1fr [full-end];
+
+we can say: minmax(6rem, 1fr) // between 6rem and 1fr
+and with that, we will always keep a minimum of 6rem on the sides of 8 columns(which those sides are those columns between the sidebar and
+8 columns group and between 8 column group and the edge of screen in right.)
+So with that, we ensure those 2 columns never get smaller than 6rem and instead, what will START to shrink when there's not enough space to
+fit those 14rem columns in the viewport, will be the columns THEMSELVES and not those 2 columns on the sides, because they now have a MINIMUM
+width, so they would never gets less than 6rem. So those 8 columns are the ones who will start shrinking when there's not enough space for
+those 2 other columns(on other sides) to shrink ANYMORE!
+Now as we approach to the 6rem width of those 2 columns, those 2 columns won't shrink anymore and instead the 8 group columns will shrink.
+So that 6rem is the minimum which those 2 columns will always have no matter what and they will have 1fr if there's enough space.
+So as we decrease the viewport to where the width of those columns arrive to 6rem, they won't get smaller anymore and instead the 8 columns will do
+instead and so what this does, is that it ensures that there's always enough space(tudor said margin!) between the content the end of the page.
+Now we can build the sections one by one.*/
 
 
 /* My notes:
