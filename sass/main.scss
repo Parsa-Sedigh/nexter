@@ -1027,6 +1027,331 @@ So that 6rem is the minimum which those 2 columns will always have no matter wha
 So as we decrease the viewport to where the width of those columns arrive to 6rem, they won't get smaller anymore and instead the 8 columns will do
 instead and so what this does, is that it ensures that there's always enough space(tudor said margin!) between the content the end of the page.
 Now we can build the sections one by one.*/
+/* 4. Building the Features Section - Part 1:
+- How and why to create grids inside grids
+- how to create responsive component without media queries
+- how to build a small component using css grid
+
+We chose to create the features section first, because it's simple than the header or the realtors sections and we will then come back to that
+top part(header and realtors).
+In features section, what we have are basically 6 features(grid-items) laid out in a 2 by three grid. So three columns and two rows and
+so this is a perfect use case for using css grid. So let's again START doing that in our markup(in features section).
+Learn: In emmet, we can use $ to number stuff. So .feature$*6 will create 6 <div>s with class of feature1, feature2 and ... .
+ But we can also emmet to introduce some text into the html element right off the bat and for that, we just have to use {}, like this:
+ EX) .feature{feature $}*6
+ this would create 6 <div>s with class of feature and the content of them would be: feature 1, feature 2 and ...
+ So: <div class="feature">feature 1</div>...
+
+Now go to features file. We know that .features itself, is a grid item. BUT now we want that grid-item to be a grid-container too and so
+that's just the same thing as we have in flexbox, where a flex-item can easily become a flex-container itself too! In this case, all we have to
+do is to write: display: grid; on the .features .So with that, .features class is a grid-container and a grid-item simoninously.
+
+It would be helpful to have sth called a subgrid in there and that's actually sth that's coming to css grid in the second level of the specification.
+But right now, sub-grids aren't available. So what will a subgrid actually be?
+Basically it will allow a grid which is inside a grid, like in the case of features, to like snap it's tracks to the parent grid.
+For example, align it's columns with the columns of the parent grid. So in the example of features, we could make it so the columns of that
+small grid(the columns of .features grid), would AUTOMATICALLY be where the columns of our overall page layout are.(because the overall page
+is direct parent of .features which itself is a grid and we want it's columns to be where the columns of overall page is) and actually that would
+be helpful here, but right now that's not possible! and so we need to MANUALLY create new columns for the feature grid-container, because again,
+it won't snap it's tracks to it's parent grid which is the .container class. For example if .features were subgrid, we could create a grid(.features)
+where we could automatically say the one column should be like those 2 left most column tracks of .container grid, so basically snapping to those
+tracks of it's parent which is a grid-container. But currently that's not possible and so we're just gonna manually create our grid.
+So let's start with the columns of that grid and we want 3 columns for .features grid-container and therefore we just say: repeat(3, 1fr); which
+means 3 columns with 1fr unit for each(NOT 1/3 fr for each!!!) which this would create 3 equally sized columns.
+Now about the rows, we don't actually need to specify anything for the rows. I mean, we could do it and we would do it basically like:
+grid-template-rows: auto auto;
+But that's not necessary at all, because that's just what's gonna happen anyway if you don't define anything at all and so we don't need that.
+What actually will happen is that we create an IMPLICIT grid. So all of our items will be placed in an implicit grid and not in an explicit grid.
+Because we don't define the rows, so we have like zero cells defined for our grid! BUT that's not a problem at all, it works just the same.
+So let's get rid of explicitely setting grid-template-rows for .features .
+
+In devtools of firefox and in layout section in right panel of elements tab, if you select on section.features , it will deselect the
+body.container grid layout, so it will basically deselect the overall layout in this case. So we can either have that one(body.container) or
+the other one(section.features) and in features section, we now have a three by two grid
+Important: And you see that some of the lines(in this case, the lines between cells and between the bottom cells and the bottom edge of grid which
+ in other words is bottom lines of bottom cells in .features grid) in a selected grid layout is dotted and that means those are row tracks of
+ an implicit grid.
+Now we can get rid of debugging huge font-sizes and paddings and background colors and also add some margin to top and bottom of .features
+grid-container(which is also a grid-item simontiniously).(The debugging styles that were in base.scss:
+.container {
+
+  & > * {
+    padding: 40px;
+    font-size: 3rem;
+  }
+})
+
+Now we're ready to start filling the grid-items of .features with the actual content.
+The font-size and font-family of paragraph texts in content(the usual text) is different than header and those header elements are <h4>, also
+the name persons in realtors section is also <h4>, the heading in realtors is <h3>, that big header in header section is <h1> and the big header in
+story section is <h2>, the author says he could done that differently, but that's up to us to how we do it in our project.
+So that's the hierarchy the author used for the headings.
+
+In class name of <h4> which is heading-4 you can see that we're already using like a reusable style and so heading-4 is like a component that
+we're gonna reuse throughout the page later on and so that's not really part of the feature block and the feature component itself.
+
+Of course we could leave the same text in all those <p> elements of 6 features, but then it would look weird and not natural at all and
+also tutor wants to show us sth that happens when we have different amount of text there and so it's useful to have different text in those
+6 features.*/
+/* 5. Building the Features Section - Part 2:
+We have the icon and the text and the heading separately, to style.
+So we have .features and also .feature . So this .feature component in theory, would be reusable in another page. So it's completely independent
+from the .features class. But we still put them in the SAME FILE though, because they are closely related and having these classes in different
+files would make us jump around a lot rhough the different files and that would be terrible for recording videos!!! and so basically each of the
+section now got it's own file and there, we have the overall element which is like the container of those components or elements.
+(like the .feature component in features section)(so for example the .features class which is for the overall element in features section
+which this section has it's own file). But again, that .feature would be completely reusable somewhere else later on the page or if we had
+another page on our website, we could again use that class.
+Now let's start by styling the .feature__text .
+
+The width and height of a svg icon would be usually the same number.
+
+In future we will have also heading-1, ... and we put them in typography file. So let's actually write all of them in that file, why not!!
+We're gonna use $font-display font which is josefine sans for all of the headings.
+
+Remember: We included some certain font-weight in the html file from the google fonts.
+Important: We want all of those .heading-<x> classes to have some properties which in case of this class, we want them to have 2 properties
+ and so that's a perfect use case for a sass extend. For that I created a placeholder named heading and the syntax for it is: %heading.
+ So when we say: @extend %<name of placeholder>, what's gonna happen is the class name that we wrote that extend in it, is copied instead of
+ where %<name of placeholder> lives.
+EX) When we have:
+%heading {
+  <some css rules that every class that extend this placeholder will get>
+}
+
+.heading-1 {@extend %heading;}
+
+What would happen is that the class name(.heading-1) is gonna copied instead of where %heading currently leaves. So it would be:
+.heading-1 {
+  ...
+}
+which in above, the place where .heading-1 lives, was the place where the placeholder lives, right?
+So in typography file that we have this placeholder and @extend, what's gonna happen it's like, as if that .heading-1, .heading-2 ...
+will be copied to that placeholder(%heading).
+So it's not a mixin, because a mixin works the other way around. So with the mixin, the code inside the mixin that we declared, will then
+be PASTE into each of .heading-1 and ... .heading-4(the selectors that @include that @mixin) but with @extend it works the other way around.
+So basically those selectors are copied into a huge selector??(the author says that but I think, the placeholder is the right word for that huge
+selector!) which then makes the code inside itself, apply to all of those selectors that were copied in the place where placeholder lived.
+
+Now remember that we want to use that .heading-4(and all other heading classes) in different situations throughout the page.
+So we want to use it on the .features but also in the realtors section and in names of our realtors which in that place, the element
+that need .heading-4 is white and not dark(which is the color for .heading-4 we have in features section) and therefore, we need to do that
+with a modifier class. So let's add some modifier class with sass nesting, inside .heading-4 and we also HAVE TO add one of those
+modifier classes to html too, because the color of <h4> would be defined in those classes and not in .heading-4 (because that's actually
+the responsibility of modifier classes, so they would be ALSO added ALONGSIDE the normal(block or element) classes)
+So add .heading-4--dark(the dark version or modifier which we know a modifier has 2 dashes) next to the heading-4 in those 6 features.
+
+In each feature which is a small component and we have a two-dimensional layout there. Because we have the row axis and the column axis.
+So it's really a two-dimensional and so why not use a css grid?
+So we will have a two-by-two grid(I don't mean the overall layout of features section, but the overall layout of each feature).
+
+So we're gonna have have that two-by-two grid and then in there, we will place three elements. So now go to feature file and .feature class there.
+We know that .feature ITSELF, is a grid-item, will now also become a grid-container. So we have a grid inside a grid, inside a grid!!!
+So just like what we had in flexbox, we can nest the grids really deep. So add display: grid; to .feature , then define it's columns.
+Now what width do we want to have for the first column of .feature?
+The first column will contain the icon and we already know the width of the icon, it's 4.5rem and so for that first column we could simply put
+4.5rem as well. But instead of doing that, we will simply put auto OR we could use min-content or max-content. So let's actually use min-content,
+why not?! Because this way, if we eventually wanted to change the width of the icon, then the width of the first column which the icon is
+in that column, will AUTOMATICALLY ADJUST, without us having to change anything! But if you were used a fixed number for width of that column
+and if you changed the width of content(in this case the icon) that are in that column, you HAVE TO change the width of column as well, so it's not
+good and then the rest of the grid, so second column, will occupy the rest, so 1fr.
+
+Now as for the rows, again, we don't really need to specify them, because all we want to happen is them to be the size of THE CONTENT that is
+inside them and so once more, we don't really define them and probably you start ot see this emerging like as a trend,
+Important: so, many times, we don't really define the rows, we just define the columns.
+and in a real word scenario, that's actually many times the case. So many times, WE JUST WANT THE CONTENT TO DEFINE THE ROWS and so in that
+case, it's not really necessary to define the rows. We will have other cases where we will define the rows, but for now, it's good like this
+and it works perfectly fine like this.
+
+Currently the result of each grid-item layout for .feature is not good yet. Because you see all 4 grid-cells, the first grid-cell
+one is much larger, than the icon and that's because right now, we only have 3 elements(yes we ultimately need 3 elements as we have currently,
+but the paragraph must be placed under the ) in those grid-cells and so the third one(which is
+the paraggraph) of course, because of the auto-placement algorithm, gets placed under the icon cell, so what we can do, is to place
+the grid-item that has the paragraph, in the right grid-cell, but actually what's even better, is to make the icon grid-cell span ALL the way
+until the end(vertical end), so that we end up with that left most vertical grid area for that icon alone. Because right now, the upper
+row is also as high as those icons, but actually we want it be as high as the heading text and not as high as the icon height and so if we
+had all of the left most column(or those 2 rows) for only that icon, then that would happen perfectly fine.
+So go to .feature__icon and we want it to have the grid-row prop set to start at 1 all the way to the end, or span 2 cells. In this case, -1 or
+span 2 is really the same, we could just add -1 and then we're sure that it goes all the way until the end.
+Important: row props will define the height of grid-cells and column props will define the width of cells. In this case, for the icon,
+ we define it's grid-row, so in other words, we defined it's height which is from line number-1 till the end.
+and so now automatically, the <p> should get placed in the right-bottom cell.
+BUT! For some reason, that didn't happen! WHY?
+Important: Because -1 means NOT the end of the grid, but the end of the EXPLICIT grid. So -1 would be the last explicit grid-line,
+ but we didn't really define(explicitely- but there would be some implicit row lines definitely) any grid-rows(why rows? Because we used
+ -1 on grid-row) and so there's not really an explicit grid in that casae and so that -1 there, doesn't make much sense(again because there's
+ no explicit row grid that we define in this case).
+So instead of just -1, we should add span 2 which results in the same grid in that case.
+So again, the -1 only works with an explicit grid but we had an implicit grid in .feature grid, because we didn't define the rows and so
+it didn't work as expected, but with span 2, it does work as expected.
+
+In inspect of grid, it doesn't really highlight the spanning going on(span 2), but it doesn't matter because we can see it by ourselves
+and you can see those icons in .feature is also in some parts of the second cell(the cell under the top left cell-so the icon is in 2 cells,
+because it now spans) and so the top left cell and bottom left cell is like all the same cell.
+So we spanned the icon across 2 those 2 cells which would cause the <p> to go to the bottom right cell.
+
+Now let's add some space between the columns and rows. So add grid-row-gap(the gap between rows) and grid-column-gap(gap between columns)
+
+Now the icons need to move to the top a bit. So basically to center, the center(yes the center of icon) of the icon with the heading,
+we need to move the icon to the top and that's sth we have to do manually. So we can translate the icon a bit to the top.
+
+The second issue that we currently have, is that you can see in the last column in features section which in there, in both cells of that
+column, the number of lines of <p> is 3 and the space between the heading and <p> is huge. So I mentioned before that I wanted to have different
+text in different <p> elements of each 6 .feature and that's because the author wanted to show us how we can fix exactly this issue(the
+issue is, when we have 4 lines of text in <p> of .feature, the space between heading and that <p> is ok, but when we have 3 lines of <p>,
+the space between heading and <p> is huge).
+
+Now if you inspect the .feature which has huge space between heading and <p>(by going to layout tab and check the div.feature element that
+has this issue), you can see that the upper row of grid layout of that particular(the .feature that has 3 lines for <p>) .feature , is larger(has
+more height), than the rows which in there, the <p> has 4 lines.
+So why is this happening?
+Because the .features grid which contains those 6 grid-items, makes it so that all of those grid-items fill the entire CELLS and(in other
+words) so that's because of the align-item's property which is by default set to stretch. align-items is a prop that controls the alignment
+of grid-items along grid-cells and those 6 features are grid-items of that .features grid and currently(by default), the align-items prop is
+set to stretch. So what do we do if we want all of them(grid-items) to start at the top? So basically move all of them to the top?
+We just have to set the align-items prop on the parent container(grid-container), to start. So do that on .features .
+By doing that, you can see that those particular grid-items(which have 3 lines for <p>) is now no longer the exact same of the grid-CELL but
+JUST the size of it's CONTENT, moved all the way to the top, just as we specify at the grid-container.
+Important: So by default, the size of grid-item is the same as the size(height) of it's grid-cell(s), because the align-items prop is set to
+ stretch.
+
+Of course we could also set align-items to end(across the column-axis) and then it would move the grid-items that are smaller than other
+grid-items, to the end(to the bottom of their grid-CELL).
+
+Now if you reduce the width of viewport, you see that each grid-item of .features grid-container, gets narrow and narrow and looks bad.
+We want to make that responsive, without writing a single line of media query. So we want the features section to when the viewport arrives
+at some point in it's width, the text of each grid-item gets smaller and that's because of media query, BUT that's not what I'm talking
+about here! so what happens is that at some point, instead of a 3-by-2 grid, we would have a 2-by-3 grid(2 columns and 3 rows) and then
+if it gets smaller, the grid would become a 1-by-6 grid and we can do this, even without media queries.
+Important: All we have to change in the grid-container(in this case, .features), is grid-template-columns prop and define some new column tracks.
+So I commented out the old unresponsive grid-template-columns.
+The trick is to first of all, we use the auto-fit keyword and remember what auto-fit does?
+Important: It simply create as many tracks as can fit, based on the width that we define, and the width that we define there will be
+ with the minmax() function. So use minmax() as second argument of repeat() or ... and we say that the width should always stay
+ between (for example 25rem) and 1fr unit.
+So again, the width of each of the tracks(in case of grid-template-columns, the width of each of the column tracks) should always stay
+between 25rem and 1fr unit and based on this(based on minmax()), css will add as many tracks(in case of .features, the column tracks) as fit
+in the container(auto-fit).
+
+So we start with 1120px for the grid-container and now let's reduce the viewport width and remember that each column (track) can have
+UP TO(maximum) 250px and at some point, it no longer could fit 3 columns and so it reduced it to 2 columns(so when grid-items has less than
+250px width, one of the columns would be push to the next row and then the container would be two-column tracks) and now you see that it's
+even more crucial to use align-items set to start and not stretch(default). Because for example in the second grid-item, in reduced width of
+grid-container, you can see we have a lot of empty space between the bottom edge of <p> and bottom edge of it's grid-cell and that's ok. In
+other words, in that situation, the size of the second grid-item is equal to it's content size and not the cell's size and so
+without the align-items set to start, it would look weird.
+
+Of course we could change the 250px or 25rem that we used in minmax() to sth else, but the tutor found that it works well in that particular
+situation.
+
+So in .features section, we used 2 grids there, one big grid which could fit all of those 6 grid-items, so one grid-item for each feature and
+then each feature is a grid-container ITSELF which then itself contains those 3 grid-items(icon(spans across 2 grid-cells), heading and <p>, so
+in there we have 3 grid-items, but INITIALLY had 4 grid-cells, which then transforms to 3 grid-cells, because the icon item spans across 2
+cells).
+
+Grid allows us to nest as many grids inside of each other and that's helpful to create even very small twp-dimensional layouts.
+So we could have used like flexbox for each of those feature boxes, but then we would have to mess with margins, so we would have added a
+margin to the bottom of heading OR top of the <p> and that would have added some extra complexity.
+
+So grids can also be for very small comps as long as they are two-dimensional.*/
+/* 6. Building the Story Section - Part 1:
+- how to deal with overlapping grid items
+- why images are special and behave differently than other grid items
+- how to decide if flexbox is a better tool in certain situations
+
+Let's start with right side(story__content) of story section which we put some elements in there and in the end also center that
+content vertically in that container.
+
+In story__content, we have two special symbols, one for opening the quote and one to closing the quote. The first especial entity is:
+&ldquo; and next: &ldquo;
+
+For class name of <p> inside story__content , we're using the name of the block which in that case is "story" but in <h3> and <h2> we didn't
+do that, because those classes are reusable, so we didn't use the BEM convention for those classes.
+
+First let's add some padding to the story__content box.
+The grid-column props that we used for &__pictures and &__content in story.scss file were for placement of those 2 grid-items(&__pictures and
+&__content) in our overall layout grid.
+
+Now let's open typography file and style the heading-2 and heading-3 and we CAN(we're ABLE to) set the font-style to italic because
+we included the italic style in the beginning of html file(400i and 300i) and also for heading-2 , we want a light and a dark version.
+Because we're gonna reuse it somewhere else on the page with a light version.
+Right now we want the dark one, so let's go add that there.
+
+Currently, we have a problem in heading-2 of story__content and that's because of that huge line-height that we defined which is 1.6(I think
+it's the default value and we didn't define anything, the tudor said that we defined 1.6!) and so let's put that to 1 there,
+so with that, we don't have all of the space between lines of that heading-2. So in .heading-2 class, put line-height: 1;
+
+We're ALSO gonna style the .btn class in typography file!!!
+Since it's a button element, we need to also get rid of the border and also border-radius, because by default, it has some border-radius and
+we don't need that in that case.
+So border: none; and border-radius: 0;
+The button doesn't have that hand cursor by default, so we need to define that for button.
+
+Let's make the .story__text bigger and italic.
+
+About the spacing inside .story__content elements, we really shouldn't hard-code the margin-bottom props for those 2 headings in .story__content ,
+because, again, we're gonna reuse them throughout the page and so if we add some margin there which would be good for that situation(the .story__content
+situation), but then that margin might not be good for other situations in other places of our page and therefore, we're gonna use some helper classes
+there. I actually gonna add those helper classes also to typograpgy file, because we don't want to just create another file just for that.
+
+mb stands for margin-bottom and sm stands for small. With these abbrevations, we don't have to write out huge class names. hg stands for huge.
+
+There's sth happening in css right now where people are starting to style their entire pages using only those small and unique classes(like what we
+did with utility classes) and that's called atomic css and it's useful to use those classes in some points(sometimes it's useful).
+Now let's use those helper classes that we defined on headings inside elements of .story__content .
+
+We want to use .mb-lg for .story__text , but wait! instead of putting .mb-lg on .story__text, we could put margin-bottom: 4rem; directly on the
+.story__text , because .story__text class isn't a reusable class.
+Important: Whenever you have a reusable class used on an element and also you want that element to have some OTHER styles OTHER than the styles whcih
+ that reusable class provides, you HAVE TO use a utility class on that element, instead of manipulating that reusable class with styles that you
+ want to add! But when you have a custom and specific class used on an element and you also want to add some styles to that element aside from that
+ custom class, you shouldn't use any other class or helper class. In this situation, you can simply put the styles you want to add, to that added
+ class and not add another class just for those new styles.
+So now, add a margin-bottom to .story__text , instead of adding a new class to that element. So in that case, instead of using a helper class there,
+it's not really necessary, because it's not a reusable element(actually class! not element) that we want to reuse somewhere else on the page.
+
+Now let's vertically center all of the elements inside their parent container which is .story__content . How are we gonna do that?
+We could use css grid once more and it wouldn't be all to difficult to do that. However, it's just a one-dimensional layout. Because you have
+that first heading then another one and ... , so all of the elements in there are all after another. BUT ON THE SIDES, YOU DON'T HAVE ANYTHING ELSE and
+so it's just a one-dimensional layout, like it's going from top to bottom, so in this case the only direction is vertical. So we could use instead of
+css grid, flexbox.
+So how are we gonna do that?
+First of all, we need to make .story__content which is the parent element of the elements that we want to center them inside their parent,
+should be the flex container. So display: flex; on the &__content . Now all of the flex-items inside &__content are now SIDE BY SIDE(default behavior).
+But that's not what we want.
+Important: We want them one BELOW THE OTHER and so we need to change the flex-direction to column and with that, we also change
+ the axis. So now the main axis is going from top to dawn and the cross axis is NOW going from left to right.
+Now how do we now center all of those items across the main axis(which now is from top to bottom)?
+We use justify-content: center;
+Now when we change the size of viewport, you see that it always stays vertically centered.
+
+Currently, we have a problem and that is that button is now ranging all the way from left to right(which currently(because of
+flex-direction: column) is the direction of cross axis) and do you remember why that is happening?
+It is, because the align-items prop(related to cross axis) in flexbox is set to stretch(be default), but we don't want that and we want to set it
+to flex-start. In this case, using flex-start instead of stretch in align-items, doesn't really affect the other elements, just make the button not
+ranging all the way from left to right and instead, the button will start from left(which is the starting point of cross axis currently) and go
+until it's content requires, to the right.
+
+Now let's center all of the elements inside of &__content with grid.
+I commented some of props of &__content. Now which prop do we use to align all of our grid-tracks in vertical direction?
+align-content prop.
+Important: Now the same thing happens on button again, just like what we had before with flexbox, which is again the button now spans
+ all the way across the last row grid track and that is, once more, because the grid-items by default, stretch all across their grid-cells.
+So how do we stop them from doing that and instead put them to the start or in other words, to the left side?
+Well, we're looking at the row axis(because that button is spanning across the row axis, currently.) and:
+Important: to align the grid-items in row axis, we use justify-items.
+So justify-items: start; and that should fix it.
+
+So now we're using css grid for a one-dimensional layout and it's a bit counter-intuitive because for that, we have flexbox, but it's not
+a problem at all and currently instead of 4 lines of css(flexbox solution), we have 3.
+
+Currently, if you decrease the width of viewport, at some point there's not enough space there and we have too much space on the left and
+right side and so we can also instead of having the padding hard-coded(the left and right paddings which are hard coded to being 12rem),
+we can also set them as a percentage of the viewport(vw in this case(because we're decreasing the WIDTH of viewport and seeing that much space)).
+So instead of 12rem, I used 8vw. Now if you resize the viewport's width, you see that now that padding changes as the width of viewport changes
+and so that viewport width unit(vw) is getting more used for building truly responsive layouts.*/
+/* 7. Building the Story Section - Part 2:
+*/
 
 
 /* My notes:
