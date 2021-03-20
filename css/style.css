@@ -166,7 +166,25 @@ PLACEMENT of all our grid-item in the correct position.*/
 
 .story__pictures {
   background-color: #c69963;
-  grid-column: full-start / col-end 4; }
+  grid-column: full-start / col-end 4;
+  background-image: linear-gradient(rgba(198, 153, 99, 0.5), rgba(198, 153, 99, 0.5)), url(../img/back.jpg);
+  display: grid;
+  grid-template-rows: repeat(6, 1fr);
+  grid-template-columns: repeat(6, 1fr);
+  align-items: center; }
+
+.story__img--1 {
+  width: 100%;
+  grid-row: 2 / 6;
+  grid-column: 2 / 6;
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.1); }
+
+.story__img--2 {
+  width: 115%;
+  grid-row: 4 / 6;
+  grid-column: 4 / 7;
+  z-index: 1;
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.2); }
 
 .story__content {
   background-color: #f9f7f6;
@@ -194,8 +212,22 @@ PLACEMENT of all our grid-item in the correct position.*/
   margin-bottom: 4rem; }
 
 .homes {
-  background-color: #101d2c;
-  grid-column: center-start / center-end; }
+  /* The first part of styles of this class is related to WHEN this class is a grid-item to it's parent and the second part of styles of
+   this class is WHEN this class itself, is a gird-container.*/
+  grid-column: center-start / center-end;
+  margin: 15rem 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+  grid-gap: 7rem; }
+
+.home {
+  background-color: #f9f7f6; }
+  .home__img {
+    width: 100%; }
+  .home__location svg, .home__rooms svg, .home__area svg, .home__price svg {
+    fill: #c69963;
+    height: 2rem;
+    width: 2rem; }
 
 .gallery {
   background-color: #54483A;
@@ -1545,6 +1577,148 @@ we can also set them as a percentage of the viewport(vw in this case(because we'
 So instead of 12rem, I used 8vw. Now if you resize the viewport's width, you see that now that padding changes as the width of viewport changes
 and so that viewport width unit(vw) is getting more used for building truly responsive layouts.*/
 /* 7. Building the Story Section - Part 2:
+That image which is a couple, is kind of in the center and that other page overlaps a bit that part of the .story__picture section and goes
+all the way in other section of story. So how are we gonna do that?
+We're just gonna create a huge grid occupying the entire of .story__pictures and then we're gonna just position those 2 images on there.
+We could do it in many different ways, but we're gonna use grid.
+
+First let's go create the markup inside <div class="story__pictures">
+
+In story file, the &__pictures is the container of those images and so let's turn it into a grid-container and then let's set the styles for images.
+Let's set both of them for now, to width: 100%; . That's kind of what we always do.
+Important: We always should specify a width in percentages for images, so that they stay flexible. So whenever you have an image, you need to set
+ it's width(OR height, not both of them!) to 100% or sth else in percentages. If you set the BOTH width and height, the aspect ration would be in
+ incorrect value.
+We're then gonna change that width: 100%; maybe a bit later, but for now, that's good. So right now, those images are occupying the entire width of
+their container and they are on top of each other, because they're occupying 100% of that. But that's not the result that we want to see in the
+end. So again, let's create a grid there and then position those items in there. What I want to do, is to create a 6-by-6 grid, but why?
+With 6-by-6 grid, we have some space between the sidebar and the first image(couple image), also we would have another space between the
+couple image and right edge of .story__pictures which that space is another column and the couple image is the other 4 columns and so with that,
+basically we have 4/6 of the container(.story__pictures) as that couple image and the other 2/6(so 1/3) as the remaining space which that
+remaining space is divided on right and left of that couple image as 2 columns.
+So basically 66% of that container(.story__pictures) will be the couple image and then 33% will be the remaining space, so 16.7% on each side(left and
+right) for that remaining space.
+
+We could've done it completely different way, but we want it to be like this. We want a 2/3 of the width of .story__pictures to be the
+couple image and so a 6-by-6 container. Because the same thing can apply to the rows as well(so 6 columns and 6 rows, so one row will be the
+space between the couple image and top edge of .story__pictures and the other row would be the space(row-track) between couple image and bottom-edge
+of container and then 4 row-tracks will be the height of couple image, so 6-by-6 grid-container).
+So: grid-template-rows: repeat(6, 1fr); and for columns ... .
+So again, we use 1fr to create equally sized tracks(row or column tracks).
+
+After setting the rows and columns of .story__pictures , let's take a look at result, just so that we know WHERE we want to position them(those
+images which are grid-items of &__pictures) and then you see that now those images are already occupying ONE GRID-CELL AND NO LONGER THE ENTIRE
+PARENT CONTAINER.
+
+So by using the layout tab, you see that now &__pictures is now a 6-by-6 grid and each of those images is now IN ONE OF THE GRID-CELLS, occupying
+100% of the width(of that grid-CELL).
+Currently, the height of the couple image isn't occupying the WHOLE height of it's grid-CELL, why?
+Because they have aspect ration and maybe they won't occupy the entire HEIGHT of their grid-areas(because we only set width to 100% and not height to
+100%).
+Now what do we want to do with that couple image?
+We want it to start at column-line-number-2 and going all the way to column-line-number-6 and for the rows, we want the same. So going from
+row-line-number-2 to number-6. So let's do that in &__img-1.
+Important: For DEFINING rows and columns which is done on grid-CONTAINER, we use grid-template-columns and grid-template-rows and for
+ POSITIONING grid-ITEMS, we use grid-column and grid-row.
+
+After defining grid-row and grid-column of &__img--1, if you look at the result, you see a kind of a weird behavior and that's because that grid-item(
+the couple image) doesn't really FIT the grid-area and that's because it's an image. So regular grid-items, like if that image was just a <div>,
+would FILL UP IT'S ENTIRE GRID-AREA(so if you now use layout tab, you see that couple image doesn't fit those bottom grid-areas currently), which
+in this case, that grid-area is a 4-by-4 grid-area, but currently that couple image doesn't fit the most bottom grid-cells.
+So regular grid-items would fill their entire grid-area, but NOT IMAGES! and that's because images are different. In a sense that, they
+have an intrinsic aspect ratio associated with them. So meaning that it(the images!) has some dimensions and therefore also an aspect ratio and
+what happens is that the image always tries to keep that aspect ratio, even if we tell it that it should fill up that entire grid-area.
+So it DOESN'T REALLY do that, instead, it keeps it's aspect ratio.
+Now if you want that couple image to be truly in the center, then we can set the align-items: center; . That's because, remember, the align-items
+prop, aligns grid-items to their grid-cells in the COLUMN-axis.
+So if you set align-items: center; on &__pictures , then the couple image is centred in it's grid-area, but still doesn't fit it's entire grid-area
+in height perspective(in this case, the couple image has some space from it's grid-area, from the top and also some space from the bottom, so it
+doesn't fit it's entire grid-area).
+Also the small image(other image than couple image) is now also centered vertically inside of it's grid-cell.
+
+Now let's style that other image. We want it to start from the middle point of .story__pictures grid and then expanding all the way to the right side.
+So it's gonna go from column-number-4 to column-number-7 and then from the row, we go from row-line-number-4 to row-line-number-6.
+So we're positioning that grid-ITEM right? So let's use grid-row and grid-column props on that grid-item which in this case is &__imag--2.
+
+Now we want that img--2 to overlaps the .story__pictures a little bit and how do we achieve that?
+We could do it in 2 ways:
+1- We could use a transform prop and scale it(img--2) up a little bit, but then it wouldn't really start from the middle of the .story__pictures grid
+anymore, unless we then ALSO define the transform-origin prop, but that's a bit too much! So let's go with second solution.
+2- Change the width of the image, so I changed the width of &__img--2 to 115%.
+So if we change that width to 115% or sth a bit bigger or smaller, then, that image(the height and also the width) would gonna increase.
+Why both the width AND the height of image would gonna increase, even when we just increasing the width of that image, like this example with &__img--2?
+Because when the width(or height) of an image changes and you don't specify the height(or width) of that image, it means you're preserving
+the aspect ration of that image and this also means, when you increase(or decrease) one of the width or height, the other prop(width pr height) would
+ALSO BE CHANGING. So this is the reason that we have in this situation.
+
+So when the image is scaled to width: 115%; , it's height is increased as well. But if you inspect the image, then you'll see that it actually
+is also on the right part of the .story section , but currently, you can't see the part of &__img--2 which is on the right part of .story and
+that's because of the z-index . So we have to assign that image class, a bigger z-index and any number for z-index works there and with that,
+the img--2 is now on top of .story__content .
+
+Now, because we change the width of img--2, the height of it also changes(because of keeping aspect ratio) and therefore, the top left edge point of
+img--2 is no longer starts from an edge POINT of the grid system, but still starts from edge LINE(column line) of grid-system.
+
+We used .2 for opacity in rgba() of box-shadow for img--2 , instead of .1, because that &__img--2 is overlapping the lighter area(.story__content) and
+so otherwise people won't see it at all.
+
+Why we used "../"(go one level up) in background-image prop of &__pictures?
+Because once that is compiled, we are in the css folder and from there, we need to move up which after that we would be in the global project
+folder and then from there we go into img folder.
+Now we need to add an overlay with some color to that background-image, so use linear-gradient() there, in order to make it look a bit more in place.
+In linear-gradient() in this case, we give it 2 EQUAL colors. So we have one background-image(gradient) on top of our real image(url("...")).
+Important: So when we have: background-image: <url("x") or ...>, <url("y") or ...> ,
+ the x would be on TOP of y.
+Also don't forget to add comma between multiple background-images when you have actually multiple of them.
+
+You could used absolute positioning to position those images too, but we used grid once more.
+
+Next, we're gonna create beautifully designed cards.*/
+/* 8. Building the Homes Section - Part 1:
+- How to build a rather complex component using a mix of css grid properties, overlapping and flexbox
+
+Let's start by overall grid which is a 3x2 grid in the features section. So let's go to html and create 6 .home elements.
+In emmet, we use {} to add some content into each of the elements that we're building(if there are multiple(*<x>) of course!)
+In html we wrote: .home{Home card $}*6. In emmet, $ means: number of element.
+
+Our grid container is .homes which is the parent of our six .home grid-items. So let's define our grid-columns in .homes and let's do that
+the exact same way that we did in .features section.
+
+In repeat() we say that we want as many columns as fit into the grid-container and for that, remember, we can use auto-fit keyword and then
+we say that we want each of those columns to have at least 25rem and that it can go all the way to 1fr. So we do that with minmax() .
+So if there's enough space available for that, it will be 1fr. So that value for grid-template-columns in .homes , will ensure that those
+columns are completely responsive without having to write a media query at all.
+Also let's define the gap between the rows and columns.
+
+User can click on that heart icon and then put it on the wishlist.
+
+We don't use a reusable class for <h5> in .home , because we want that one to ONLY be in there and wouldn't used in other places, so we used
+BEM for their class, because again, it's not reusable.
+
+We didn't give <svg> and <p> elements inside .home__location , any classes, because otherwise, we would have to call that <svg>'s class like:
+home__location-icon and the <p>, home__location-text or sth and I don't think that's necessary. So let's keep that <div> at home__location for it's
+class name and then we know that we can style the <svg> in there and <p> element in there, separately.
+
+What <sub> element does, is that it moves the text a bit UP. So in the case of <p>325 m<sup>2</sup></p> , 2 will be a bit on top of the m.
+
+In vscode you can use "expand selection" in selection tab to select all of the text that is inside of two tags.
+
+After writing the html for home cards(carts), as the result, it looks all kind of weird now and that's because those images are way too big, such as
+(and also)the icons. So let's just very quickly fix that, in order that it doesn't look that bad. So add width: 100%; to .home__img .
+
+&__location, &__rooms and ..., will be all the same and so let's add them all into one bigger selector(with comma between each other).
+
+Also we didn't use & sign for svg and p elements inside that big selector for &__location and ... , because those p and svg are nested elements(they're
+INSIDE those selectors).
+Important: So when some elements are actually INSIDE selectors in HTML, it's not necessary to use & sign for those nested elements.
+
+9. Building the Homes Section - Part 2:
+We're gonna layout all of those elements in the cart, using a grid. But how are we actually gonna do that?
+The first thing that comes into our attention is that each of those carts are laid out like in two-columns. Because you can see those 2
+icons on the left side and the other two icons on the right side and so what that means is that we have a grid which has 2 columns and so we can
+then put those 2 left icons, on one side or in one column and the other right icons in another column and all the other elements, just like
+that button, that name of home element and that image, they can then SPAN both those columns from one side to the other side of the grid-container.
+
 */
 /* My notes:
 The first and last(outer) column and row tracks(lines) never would have gap and therefore they're always thin lines. But if you set some gap

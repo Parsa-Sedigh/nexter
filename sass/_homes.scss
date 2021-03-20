@@ -1,4 +1,36 @@
 .homes {
-  background-color: $color-secondary;
+  /* The first part of styles of this class is related to WHEN this class is a grid-item to it's parent and the second part of styles of
+   this class is WHEN this class itself, is a gird-container.*/
   grid-column: center-start / center-end;
+  margin: 15rem 0;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(25rem , 1fr));
+  grid-gap: 7rem;
+}
+
+.home {
+  background-color: $color-grey-light-1;
+
+  &__img {
+    width: 100%;
+  }
+
+  &__like {}
+
+  &__name {}
+
+  &__location, &__rooms, &__area, &__price {
+
+     svg {
+      fill: $color-primary;
+      height: 2rem;
+      width: 2rem;
+    }
+
+     p {
+
+    }
+  }
+
 }
